@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
         body {
             background: #f8f9fa;
         }
+
         .sidebar {
             background: #212529;
             min-height: 100vh;
@@ -17,6 +19,7 @@
             position: sticky;
             top: 0;
         }
+
         .sidebar .nav-link {
             color: #adb5bd;
             font-weight: 500;
@@ -24,50 +27,64 @@
             margin-bottom: 0.5rem;
             transition: background 0.2s;
         }
-        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
             background: #343a40;
             color: #fff;
         }
+
         .sidebar .nav-link i {
             width: 1.5rem;
             text-align: center;
         }
+
         .dashboard-card {
             border-radius: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
             position: relative;
             overflow: hidden;
         }
+
         .card {
             border-radius: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
         }
+
         .table-responsive {
             border-radius: 1rem;
             overflow: auto;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             vertical-align: middle;
         }
+
         @media (max-width: 991px) {
             .sidebar {
                 min-height: auto;
                 position: static;
             }
         }
+
         @media (max-width: 767px) {
             .sidebar {
                 padding: 1rem 0.5rem;
             }
+
             .main-content {
                 padding: 1rem 0.5rem;
             }
-            .dashboard-card, .card {
+
+            .dashboard-card,
+            .card {
                 margin-bottom: 1rem;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -88,9 +105,6 @@
                     </a>
                     <a href="events.php" class="nav-link<?= $activePage === 'events' ? ' active' : '' ?>">
                         <i class="fas fa-calendar"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link<?= $activePage === 'timers' ? ' active' : '' ?>">
-                        <i class="fas fa-clock"></i> Timers
                     </a>
                     <a href="admins.php" class="nav-link<?= $activePage === 'admins' ? ' active' : '' ?>">
                         <i class="fas fa-users-cog"></i> Admins
@@ -114,4 +128,5 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

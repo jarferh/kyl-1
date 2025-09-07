@@ -17,7 +17,7 @@ if (!isset($_SESSION['admin_id'])) {
 if (isset($_POST['action']) && $_POST['action'] === 'update_status') {
     $id = $_POST['application_id'];
     $status = $_POST['status'];
-    
+
     $stmt = $pdo->prepare("UPDATE fellowship_applications SET status = ? WHERE id = ?");
     $stmt->execute([$status, $id]);
 }
@@ -80,6 +80,7 @@ $applications = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,6 +89,7 @@ $applications = $stmt->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -105,9 +107,6 @@ $applications = $stmt->fetchAll();
                     </a>
                     <a href="events.php" class="nav-link">
                         <i class="fas fa-calendar me-2"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link">
-                        <i class="fas fa-clock me-2"></i> Timers
                     </a>
                     <a href="admins.php" class="nav-link">
                         <i class="fas fa-users-cog me-2"></i> Admins
@@ -150,19 +149,19 @@ $applications = $stmt->fetchAll();
                                 <select class="form-select" name="batch_id">
                                     <option value="">All Batches</option>
                                     <?php foreach ($batches as $batch): ?>
-                                    <option value="<?php echo $batch['id']; ?>" 
+                                        <option value="<?php echo $batch['id']; ?>"
                                             <?php echo $currentBatchId == $batch['id'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($batch['name']); ?>
-                                        (<?php echo ucfirst($batch['status']); ?>)
-                                    </option>
+                                            <?php echo htmlspecialchars($batch['name']); ?>
+                                            (<?php echo ucfirst($batch['status']); ?>)
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Search</label>
-                                <input type="text" class="form-control" name="search" 
-                                       value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>" 
-                                       placeholder="Search by name or email">
+                                <input type="text" class="form-control" name="search"
+                                    value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
+                                    placeholder="Search by name or email">
                             </div>
                             <div class="col-md-12 mt-3">
                                 <button type="submit" class="btn btn-primary">Apply Filters</button>
@@ -192,55 +191,54 @@ $applications = $stmt->fetchAll();
                                 </thead>
                                 <tbody>
                                     <?php foreach ($applications as $app): ?>
-                                    <?php 
+                                        <?php
                                         $birth_date = new DateTime($app['birth_date']);
                                         $today = new DateTime();
                                         $age = $birth_date->diff($today)->y;
-                                    ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($app['full_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($app['email']); ?></td>
-                                        <td><?php echo htmlspecialchars($app['phone']); ?></td>
-                                        <td><?php echo $age; ?> years</td>
-                                        <td><?php echo htmlspecialchars($app['local_government'] . ', ' . $app['ward']); ?></td>
-                                        <td><?php echo htmlspecialchars($app['education_level']); ?></td>
-                                        <td>
-                                            <span class="badge bg-<?php 
-                                                $status = $app['status'] ?? 'pending';
-                                                echo $status === 'approved' ? 'success' : 
-                                                    ($status === 'rejected' ? 'danger' : 'warning'); 
-                                            ?>">
-                                                <?php echo ucfirst($status); ?>
-                                            </span>
-                                        </td>
-                                        <td><?php echo date('M d, Y', strtotime($app['created_at'])); ?></td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                                    Action
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a class="dropdown-item" href="view_application.php?id=<?php echo $app['id']; ?>">
-                                                            <i class="fas fa-eye me-2"></i> View
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item update-status" href="#" data-id="<?php echo $app['id']; ?>" data-status="approved">
-                                                            <i class="fas fa-check me-2"></i> Approve
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item update-status" href="#" data-id="<?php echo $app['id']; ?>" data-status="rejected">
-                                                            <i class="fas fa-times me-2"></i> Reject
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($app['full_name']); ?></td>
+                                            <td><?php echo htmlspecialchars($app['email']); ?></td>
+                                            <td><?php echo htmlspecialchars($app['phone']); ?></td>
+                                            <td><?php echo $age; ?> years</td>
+                                            <td><?php echo htmlspecialchars($app['local_government'] . ', ' . $app['ward']); ?></td>
+                                            <td><?php echo htmlspecialchars($app['education_level']); ?></td>
+                                            <td>
+                                                <span class="badge bg-<?php
+                                                                        $status = $app['status'] ?? 'pending';
+                                                                        echo $status === 'approved' ? 'success' : ($status === 'rejected' ? 'danger' : 'warning');
+                                                                        ?>">
+                                                    <?php echo ucfirst($status); ?>
+                                                </span>
+                                            </td>
+                                            <td><?php echo date('M d, Y', strtotime($app['created_at'])); ?></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                                        Action
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item" href="view_application.php?id=<?php echo $app['id']; ?>">
+                                                                <i class="fas fa-eye me-2"></i> View
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item update-status" href="#" data-id="<?php echo $app['id']; ?>" data-status="approved">
+                                                                <i class="fas fa-check me-2"></i> Approve
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item update-status" href="#" data-id="<?php echo $app['id']; ?>" data-status="rejected">
+                                                                <i class="fas fa-times me-2"></i> Reject
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                    <!-- View modal removed - now using separate page -->
+                                        <!-- View modal removed - now using separate page -->
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -248,28 +246,28 @@ $applications = $stmt->fetchAll();
 
                         <!-- Pagination -->
                         <?php if ($total_pages > 1): ?>
-                        <?php
-                        // Build query string for pagination
-                        $query_params = $_GET;
-                        unset($query_params['page']); // Remove page from params
-                        $query_string = http_build_query($query_params);
-                        $query_string = $query_string ? '&' . $query_string : '';
-                        ?>
-                        <nav class="mt-4">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                    <a class="page-link" href="?page=<?php echo $page-1 . $query_string; ?>">Previous</a>
-                                </li>
-                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?page=<?php echo $i . $query_string; ?>"><?php echo $i; ?></a>
-                                </li>
-                                <?php endfor; ?>
-                                <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
-                                    <a class="page-link" href="?page=<?php echo $page+1 . $query_string; ?>">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
+                            <?php
+                            // Build query string for pagination
+                            $query_params = $_GET;
+                            unset($query_params['page']); // Remove page from params
+                            $query_string = http_build_query($query_params);
+                            $query_string = $query_string ? '&' . $query_string : '';
+                            ?>
+                            <nav class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo $page - 1 . $query_string; ?>">Previous</a>
+                                    </li>
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                        <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $i . $query_string; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo $page + 1 . $query_string; ?>">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -291,10 +289,10 @@ $applications = $stmt->fetchAll();
                         <select class="form-select" id="exportBatchId">
                             <option value="">All Batches</option>
                             <?php foreach ($batches as $batch): ?>
-                            <option value="<?php echo $batch['id']; ?>">
-                                <?php echo htmlspecialchars($batch['name']); ?>
-                                (<?php echo ucfirst($batch['status']); ?>)
-                            </option>
+                                <option value="<?php echo $batch['id']; ?>">
+                                    <?php echo htmlspecialchars($batch['name']); ?>
+                                    (<?php echo ucfirst($batch['status']); ?>)
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -349,7 +347,7 @@ $applications = $stmt->fetchAll();
             const batchId = document.getElementById('exportBatchId').value;
             const status = document.getElementById('exportStatus').value;
             const format = document.getElementById('exportFormat').value;
-            
+
             try {
                 // Show loading state
                 const exportBtn = document.querySelector('#exportModal .btn-primary');
@@ -389,9 +387,9 @@ $applications = $stmt->fetchAll();
 
                 for (const row of data) {
                     csvRows.push([
-                        row.full_name, row.email, row.phone, 
+                        row.full_name, row.email, row.phone,
                         row.birth_date, row.gender,
-                        row.local_government, row.ward, 
+                        row.local_government, row.ward,
                         row.current_address, row.education_level,
                         row.field_of_study, row.institution_name,
                         row.graduation_year, row.current_occupation,
@@ -400,7 +398,7 @@ $applications = $stmt->fetchAll();
                         row.community_service, row.why_fellowship,
                         row.project_idea, row.expectations,
                         row.reference_name, row.reference_phone,
-                        row.reference_relationship, 
+                        row.reference_relationship,
                         row.status.charAt(0).toUpperCase() + row.status.slice(1),
                         row.batch_name,
                         new Date(row.created_at).toLocaleString()
@@ -408,14 +406,16 @@ $applications = $stmt->fetchAll();
                 }
 
                 // Convert to CSV string
-                const csvContent = csvRows.map(row => 
-                    row.map(cell => 
+                const csvContent = csvRows.map(row =>
+                    row.map(cell =>
                         typeof cell === 'string' ? `"${cell.replace(/"/g, '""')}"` : cell
                     ).join(',')
                 ).join('\\n');
 
                 // Create and download file
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const blob = new Blob([csvContent], {
+                    type: 'text/csv;charset=utf-8;'
+                });
                 const link = document.createElement('a');
                 if (navigator.msSaveBlob) {
                     navigator.msSaveBlob(blob, 'applications_export.csv');
@@ -442,4 +442,5 @@ $applications = $stmt->fetchAll();
         }
     </script>
 </body>
+
 </html>

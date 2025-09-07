@@ -50,6 +50,7 @@ $batches = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,6 +59,7 @@ $batches = $stmt->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -75,9 +77,6 @@ $batches = $stmt->fetchAll();
                     </a>
                     <a href="events.php" class="nav-link">
                         <i class="fas fa-calendar me-2"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link">
-                        <i class="fas fa-clock me-2"></i> Timers
                     </a>
                     <a href="admins.php" class="nav-link">
                         <i class="fas fa-users-cog me-2"></i> Admins
@@ -115,61 +114,62 @@ $batches = $stmt->fetchAll();
                                 </thead>
                                 <tbody>
                                     <?php foreach ($batches as $batch): ?>
-                                    <?php 
+                                        <?php
                                         // Get application count for this batch
                                         $stmt = $pdo->prepare("SELECT COUNT(*) FROM fellowship_applications WHERE batch_id = ?");
                                         $stmt->execute([$batch['id']]);
                                         $applicationCount = $stmt->fetchColumn();
-                                    ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($batch['name']); ?></td>
-                                        <td><?php echo htmlspecialchars($batch['description']); ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($batch['application_start'])); ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($batch['application_end'])); ?></td>
-                                        <td>
-                                            <span class="badge bg-<?php 
-                                                echo $batch['status'] === 'open' ? 'success' : 
-                                                    ($batch['status'] === 'closed' ? 'danger' : 'warning'); 
-                                            ?>">
-                                                <?php echo ucfirst($batch['status']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="applications.php?batch_id=<?php echo $batch['id']; ?>">
-                                                <?php echo $applicationCount; ?> applications
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                                    Action
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a class="dropdown-item update-status" href="#" 
-                                                           data-id="<?php echo $batch['id']; ?>" 
-                                                           data-status="open">
-                                                            <i class="fas fa-play me-2"></i> Open Applications
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item update-status" href="#" 
-                                                           data-id="<?php echo $batch['id']; ?>" 
-                                                           data-status="closed">
-                                                            <i class="fas fa-stop me-2"></i> Close Applications
-                                                        </a>
-                                                    </li>
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <li>
-                                                        <a class="dropdown-item text-danger delete-batch" href="#" 
-                                                           data-id="<?php echo $batch['id']; ?>">
-                                                            <i class="fas fa-trash me-2"></i> Delete
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($batch['name']); ?></td>
+                                            <td><?php echo htmlspecialchars($batch['description']); ?></td>
+                                            <td><?php echo date('M d, Y', strtotime($batch['application_start'])); ?></td>
+                                            <td><?php echo date('M d, Y', strtotime($batch['application_end'])); ?></td>
+                                            <td>
+                                                <span class="badge bg-<?php
+                                                                        echo $batch['status'] === 'open' ? 'success' : ($batch['status'] === 'closed' ? 'danger' : 'warning');
+                                                                        ?>">
+                                                    <?php echo ucfirst($batch['status']); ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="applications.php?batch_id=<?php echo $batch['id']; ?>">
+                                                    <?php echo $applicationCount; ?> applications
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                                        Action
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item update-status" href="#"
+                                                                data-id="<?php echo $batch['id']; ?>"
+                                                                data-status="open">
+                                                                <i class="fas fa-play me-2"></i> Open Applications
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item update-status" href="#"
+                                                                data-id="<?php echo $batch['id']; ?>"
+                                                                data-status="closed">
+                                                                <i class="fas fa-stop me-2"></i> Close Applications
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <hr class="dropdown-divider">
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item text-danger delete-batch" href="#"
+                                                                data-id="<?php echo $batch['id']; ?>">
+                                                                <i class="fas fa-trash me-2"></i> Delete
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -222,7 +222,7 @@ $batches = $stmt->fetchAll();
                 e.preventDefault();
                 const status = this.dataset.status;
                 let confirmMessage = 'Are you sure you want to update the batch status?';
-                
+
                 if (status === 'open') {
                     // Check if there are any open batches
                     const openBatches = document.querySelectorAll('.badge.bg-success');
@@ -230,7 +230,7 @@ $batches = $stmt->fetchAll();
                         confirmMessage = 'Opening this batch will automatically close all other open batches. Do you want to continue?';
                     }
                 }
-                
+
                 if (confirm(confirmMessage)) {
                     const form = document.createElement('form');
                     form.method = 'POST';
@@ -263,4 +263,5 @@ $batches = $stmt->fetchAll();
         });
     </script>
 </body>
+
 </html>

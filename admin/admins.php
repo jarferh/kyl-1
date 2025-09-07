@@ -47,6 +47,7 @@ $admins = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,6 +56,7 @@ $admins = $stmt->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -72,9 +74,6 @@ $admins = $stmt->fetchAll();
                     </a>
                     <a href="events.php" class="nav-link">
                         <i class="fas fa-calendar me-2"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link">
-                        <i class="fas fa-clock me-2"></i> Timers
                     </a>
                     <a href="admins.php" class="nav-link active">
                         <i class="fas fa-users-cog me-2"></i> Admins
@@ -112,22 +111,22 @@ $admins = $stmt->fetchAll();
                                 </thead>
                                 <tbody>
                                     <?php foreach ($admins as $admin): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($admin['name']); ?></td>
-                                        <td><?php echo htmlspecialchars($admin['email']); ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($admin['created_at'])); ?></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary edit-admin" data-bs-toggle="modal" 
-                                                data-bs-target="#editAdminModal" data-admin='<?php echo json_encode($admin); ?>'>
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
-                                            <button class="btn btn-sm btn-danger delete-admin" data-id="<?php echo $admin['id']; ?>">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($admin['name']); ?></td>
+                                            <td><?php echo htmlspecialchars($admin['email']); ?></td>
+                                            <td><?php echo date('M d, Y', strtotime($admin['created_at'])); ?></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary edit-admin" data-bs-toggle="modal"
+                                                    data-bs-target="#editAdminModal" data-admin='<?php echo json_encode($admin); ?>'>
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
+                                                    <button class="btn btn-sm btn-danger delete-admin" data-id="<?php echo $admin['id']; ?>">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -234,4 +233,5 @@ $admins = $stmt->fetchAll();
         });
     </script>
 </body>
+
 </html>

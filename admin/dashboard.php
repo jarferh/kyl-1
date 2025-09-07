@@ -19,6 +19,7 @@ $adminsCount = $stmt->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,6 +28,7 @@ $adminsCount = $stmt->fetchColumn();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -44,9 +46,6 @@ $adminsCount = $stmt->fetchColumn();
                     </a>
                     <a href="events.php" class="nav-link">
                         <i class="fas fa-calendar me-2"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link">
-                        <i class="fas fa-clock me-2"></i> Timers
                     </a>
                     <a href="admins.php" class="nav-link">
                         <i class="fas fa-users-cog me-2"></i> Admins
@@ -112,17 +111,17 @@ $adminsCount = $stmt->fetchColumn();
                                     <?php
                                     $stmt = $pdo->query("SELECT * FROM fellowship_applications ORDER BY created_at DESC LIMIT 5");
                                     while ($row = $stmt->fetch()): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($row['name']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['interest']); ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
-                                        <td>
-                                            <a href="view_application.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['interest']); ?></td>
+                                            <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
+                                            <td>
+                                                <a href="view_application.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     <?php endwhile; ?>
                                 </tbody>
                             </table>
@@ -135,4 +134,5 @@ $adminsCount = $stmt->fetchColumn();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

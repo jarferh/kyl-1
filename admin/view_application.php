@@ -37,6 +37,7 @@ $age = $birth_date->diff($today)->y;
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,6 +46,7 @@ $age = $birth_date->diff($today)->y;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -62,9 +64,6 @@ $age = $birth_date->diff($today)->y;
                     </a>
                     <a href="events.php" class="nav-link">
                         <i class="fas fa-calendar me-2"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link">
-                        <i class="fas fa-clock me-2"></i> Timers
                     </a>
                     <a href="admins.php" class="nav-link">
                         <i class="fas fa-users-cog me-2"></i> Admins
@@ -84,14 +83,14 @@ $age = $birth_date->diff($today)->y;
                             <i class="fas fa-arrow-left me-2"></i> Back to Applications
                         </a>
                         <?php if ($app['status'] !== 'approved'): ?>
-                        <a href="#" class="btn btn-success update-status" data-id="<?php echo $app['id']; ?>" data-status="approved">
-                            <i class="fas fa-check me-2"></i> Approve
-                        </a>
+                            <a href="#" class="btn btn-success update-status" data-id="<?php echo $app['id']; ?>" data-status="approved">
+                                <i class="fas fa-check me-2"></i> Approve
+                            </a>
                         <?php endif; ?>
                         <?php if ($app['status'] !== 'rejected'): ?>
-                        <a href="#" class="btn btn-danger update-status" data-id="<?php echo $app['id']; ?>" data-status="rejected">
-                            <i class="fas fa-times me-2"></i> Reject
-                        </a>
+                            <a href="#" class="btn btn-danger update-status" data-id="<?php echo $app['id']; ?>" data-status="rejected">
+                                <i class="fas fa-times me-2"></i> Reject
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -102,10 +101,9 @@ $age = $birth_date->diff($today)->y;
                             <i class="fas fa-user-circle me-2"></i>
                             <?php echo htmlspecialchars($app['full_name']); ?>
                         </h5>
-                        <span class="badge bg-<?php 
-                            echo $app['status'] === 'approved' ? 'success' : 
-                                ($app['status'] === 'rejected' ? 'danger' : 'warning'); 
-                        ?> fs-6">
+                        <span class="badge bg-<?php
+                                                echo $app['status'] === 'approved' ? 'success' : ($app['status'] === 'rejected' ? 'danger' : 'warning');
+                                                ?> fs-6">
                             <?php echo ucfirst($app['status'] ?? 'pending'); ?>
                         </span>
                     </div>
@@ -336,8 +334,7 @@ $age = $birth_date->diff($today)->y;
                                                 <div class="mb-0">
                                                     <label class="text-muted">Accommodation in Azare</label>
                                                     <p class="mb-0">
-                                                        <span class="badge bg-<?php echo $app['can_accommodate'] === 'Yes' ? 'success' : 
-                                                            ($app['can_accommodate'] === 'No' ? 'danger' : 'warning'); ?>">
+                                                        <span class="badge bg-<?php echo $app['can_accommodate'] === 'Yes' ? 'success' : ($app['can_accommodate'] === 'No' ? 'danger' : 'warning'); ?>">
                                                             <?php echo htmlspecialchars($app['can_accommodate']); ?>
                                                         </span>
                                                     </p>
@@ -356,10 +353,10 @@ $age = $birth_date->diff($today)->y;
                                             <div class="card-body">
                                                 <h6 class="card-title text-primary mb-4">Passport Photograph</h6>
                                                 <?php if (!empty($app['passport_photo_path'])): ?>
-                                                    <img src="../uploads/<?php echo htmlspecialchars($app['passport_photo_path']); ?>" 
-                                                         alt="Passport Photo" class="img-fluid rounded mb-3" style="max-height: 300px;">
-                                                    <a href="../uploads/<?php echo htmlspecialchars($app['passport_photo_path']); ?>" 
-                                                       class="btn btn-sm btn-primary" target="_blank">
+                                                    <img src="../uploads/<?php echo htmlspecialchars($app['passport_photo_path']); ?>"
+                                                        alt="Passport Photo" class="img-fluid rounded mb-3" style="max-height: 300px;">
+                                                    <a href="../uploads/<?php echo htmlspecialchars($app['passport_photo_path']); ?>"
+                                                        class="btn btn-sm btn-primary" target="_blank">
                                                         <i class="fas fa-external-link-alt me-2"></i>View Full Size
                                                     </a>
                                                 <?php else: ?>
@@ -377,8 +374,8 @@ $age = $birth_date->diff($today)->y;
                                                         <source src="../uploads/<?php echo htmlspecialchars($app['video_path']); ?>" type="video/mp4">
                                                         Your browser does not support the video tag.
                                                     </video>
-                                                    <a href="../uploads/<?php echo htmlspecialchars($app['video_path']); ?>" 
-                                                       class="btn btn-sm btn-primary" target="_blank">
+                                                    <a href="../uploads/<?php echo htmlspecialchars($app['video_path']); ?>"
+                                                        class="btn btn-sm btn-primary" target="_blank">
                                                         <i class="fas fa-download me-2"></i>Download Video
                                                     </a>
                                                 <?php else: ?>
@@ -418,4 +415,5 @@ $age = $birth_date->diff($today)->y;
         });
     </script>
 </body>
+
 </html>
