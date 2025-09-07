@@ -1,0 +1,51 @@
+:root {
+    --primary-color: #8B4513;
+    --primary-hover: #A0522D;
+    --primary-light: #DEB887;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background: var(--primary-color);
+}
+
+.sidebar .nav-link {
+    color: #fff;
+    padding: 15px;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--primary-hover);
+}
+
+.sidebar .nav-link.active {
+    background: var(--primary-hover);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.dashboard-card {
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.card-header {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+}
