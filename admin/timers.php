@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'create':
                 // Deactivate all existing timers first
                 $stmt = $pdo->query("UPDATE timers SET status = 'inactive'");
-                
+
                 // Create new timer
                 $stmt = $pdo->prepare("INSERT INTO timers (title, event_datetime, status) VALUES (?, ?, 'active')");
                 $stmt->execute([$_POST['title'], $_POST['event_datetime']]);
@@ -54,6 +54,7 @@ $timers = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +63,7 @@ $timers = $stmt->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -70,25 +72,33 @@ $timers = $stmt->fetchAll();
                 <div class="text-center py-4">
                     <img src="../img/logo.png" alt="KYL Logo" style="max-width: 120px;">
                 </div>
-                <div class="nav flex-column">
-                    <a href="dashboard.php" class="nav-link">
-                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                    </a>
-                    <a href="applications.php" class="nav-link">
-                        <i class="fas fa-file-alt me-2"></i> Applications
-                    </a>
-                    <a href="events.php" class="nav-link">
-                        <i class="fas fa-calendar me-2"></i> Events
-                    </a>
-                    <a href="timers.php" class="nav-link active">
-                        <i class="fas fa-clock me-2"></i> Timers
-                    </a>
-                    <a href="admins.php" class="nav-link">
-                        <i class="fas fa-users-cog me-2"></i> Admins
-                    </a>
-                    <a href="logout.php" class="nav-link">
-                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                    </a>
+                <div class="d-flex flex-column flex-grow-1">
+                    <div class="nav flex-column">
+                        <a href="dashboard.php" class="nav-link">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                        <a href="applications.php" class="nav-link">
+                            <i class="fas fa-file-alt me-2"></i> Applications
+                        </a>
+                        <a href="events.php" class="nav-link">
+                            <i class="fas fa-calendar me-2"></i> Events
+                        </a>
+                        <a href="timers.php" class="nav-link active">
+                            <i class="fas fa-clock me-2"></i> Timers
+                        </a>
+                        <a href="admins.php" class="nav-link">
+                            <i class="fas fa-users-cog me-2"></i> Admins
+                        </a>
+                        <a href="settings.php" class="nav-link">
+                            <i class="fas fa-cog me-2"></i> Settings
+                        </a>
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="logout.php" class="nav-link">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -107,25 +117,25 @@ $timers = $stmt->fetchAll();
                 $activeTimer = $stmt->fetch();
                 if ($activeTimer):
                 ?>
-                <div class="card mb-4">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">Active Timer</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <h4><?php echo htmlspecialchars($activeTimer['title']); ?></h4>
-                                <p class="mb-0">Countdown to: <?php echo date('M d, Y H:i', strtotime($activeTimer['event_datetime'])); ?></p>
-                            </div>
-                            <div class="col-md-6 text-md-end">
-                                <button class="btn btn-primary btn-sm edit-timer" data-bs-toggle="modal" 
-                                    data-bs-target="#editTimerModal" data-timer='<?php echo json_encode($activeTimer); ?>'>
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Active Timer</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h4><?php echo htmlspecialchars($activeTimer['title']); ?></h4>
+                                    <p class="mb-0">Countdown to: <?php echo date('M d, Y H:i', strtotime($activeTimer['event_datetime'])); ?></p>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    <button class="btn btn-primary btn-sm edit-timer" data-bs-toggle="modal"
+                                        data-bs-target="#editTimerModal" data-timer='<?php echo json_encode($activeTimer); ?>'>
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php endif; ?>
 
                 <!-- Timers Table -->
@@ -144,25 +154,25 @@ $timers = $stmt->fetchAll();
                                 </thead>
                                 <tbody>
                                     <?php foreach ($timers as $timer): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($timer['title']); ?></td>
-                                        <td><?php echo date('M d, Y H:i', strtotime($timer['event_datetime'])); ?></td>
-                                        <td>
-                                            <span class="badge bg-<?php echo $timer['status'] === 'active' ? 'success' : 'secondary'; ?>">
-                                                <?php echo ucfirst($timer['status']); ?>
-                                            </span>
-                                        </td>
-                                        <td><?php echo date('M d, Y', strtotime($timer['created_at'])); ?></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary edit-timer" data-bs-toggle="modal" 
-                                                data-bs-target="#editTimerModal" data-timer='<?php echo json_encode($timer); ?>'>
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger delete-timer" data-id="<?php echo $timer['id']; ?>">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($timer['title']); ?></td>
+                                            <td><?php echo date('M d, Y H:i', strtotime($timer['event_datetime'])); ?></td>
+                                            <td>
+                                                <span class="badge bg-<?php echo $timer['status'] === 'active' ? 'success' : 'secondary'; ?>">
+                                                    <?php echo ucfirst($timer['status']); ?>
+                                                </span>
+                                            </td>
+                                            <td><?php echo date('M d, Y', strtotime($timer['created_at'])); ?></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary edit-timer" data-bs-toggle="modal"
+                                                    data-bs-target="#editTimerModal" data-timer='<?php echo json_encode($timer); ?>'>
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger delete-timer" data-id="<?php echo $timer['id']; ?>">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -269,4 +279,5 @@ $timers = $stmt->fetchAll();
         });
     </script>
 </body>
+
 </html>

@@ -93,25 +93,33 @@
                 <div class="text-center py-4 w-100">
                     <img src="../img/logo.png" alt="KYL Logo" style="max-width: 120px;">
                 </div>
-                <div class="nav flex-column w-100">
-                    <a href="dashboard.php" class="nav-link<?= $activePage === 'dashboard' ? ' active' : '' ?>">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
-                    <a href="applications.php" class="nav-link<?= $activePage === 'applications' ? ' active' : '' ?>">
-                        <i class="fas fa-file-alt"></i> Applications
-                    </a>
-                    <a href="batches.php" class="nav-link<?= $activePage === 'batches' ? ' active' : '' ?>">
-                        <i class="fas fa-layer-group"></i> Batches
-                    </a>
-                    <a href="events.php" class="nav-link<?= $activePage === 'events' ? ' active' : '' ?>">
-                        <i class="fas fa-calendar"></i> Events
-                    </a>
-                    <a href="admins.php" class="nav-link<?= $activePage === 'admins' ? ' active' : '' ?>">
-                        <i class="fas fa-users-cog"></i> Admins
-                    </a>
-                    <a href="logout.php" class="nav-link">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+                <div class="d-flex flex-column flex-grow-1 w-100">
+                    <div class="nav flex-column">
+                        <a href="dashboard.php" class="nav-link<?= $activePage === 'dashboard' ? ' active' : '' ?>">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a href="applications.php" class="nav-link<?= $activePage === 'applications' ? ' active' : '' ?>">
+                            <i class="fas fa-file-alt"></i> Applications
+                        </a>
+                        <a href="batches.php" class="nav-link<?= $activePage === 'batches' ? ' active' : '' ?>">
+                            <i class="fas fa-layer-group"></i> Batches
+                        </a>
+                        <a href="events.php" class="nav-link<?= $activePage === 'events' ? ' active' : '' ?>">
+                            <i class="fas fa-calendar"></i> Events
+                        </a>
+                        <a href="admins.php" class="nav-link<?= $activePage === 'admins' ? ' active' : '' ?>">
+                            <i class="fas fa-users-cog"></i> Admins
+                        </a>
+                        <a href="settings.php" class="nav-link<?= $activePage === 'settings' ? ' active' : '' ?>">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                    </div>
+
+                    <div class="mt-auto w-100">
+                        <a href="logout.php" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
                 </div>
             </nav>
             <!-- Main Content -->

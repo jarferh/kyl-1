@@ -124,23 +124,31 @@ unset($ev);
                 <div class="text-center py-4">
                     <img src="../img/logo.png" alt="KYL Logo" style="max-width: 120px;">
                 </div>
-                <div class="nav flex-column">
-                    <a href="dashboard.php" class="nav-link">
-                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                    </a>
-                    <a href="applications.php" class="nav-link">
-                        <i class="fas fa-file-alt me-2"></i> Applications
-                    </a>
-                    <a href="events.php" class="nav-link active">
-                        <i class="fas fa-calendar me-2"></i> Events
-                    </a>
+                <div class="d-flex flex-column flex-grow-1">
+                    <div class="nav flex-column">
+                        <a href="dashboard.php" class="nav-link">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                        <a href="applications.php" class="nav-link">
+                            <i class="fas fa-file-alt me-2"></i> Applications
+                        </a>
+                        <a href="events.php" class="nav-link active">
+                            <i class="fas fa-calendar me-2"></i> Events
+                        </a>
 
-                    <a href="admins.php" class="nav-link">
-                        <i class="fas fa-users-cog me-2"></i> Admins
-                    </a>
-                    <a href="logout.php" class="nav-link">
-                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                    </a>
+                        <a href="admins.php" class="nav-link">
+                            <i class="fas fa-users-cog me-2"></i> Admins
+                        </a>
+                        <a href="settings.php" class="nav-link">
+                            <i class="fas fa-cog me-2"></i> Settings
+                        </a>
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="logout.php" class="nav-link">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
 
