@@ -13,18 +13,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         switch ($_POST['action']) {
             case 'create':
                 $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO admins (name, email, password) VALUES (?, ?, ?)");
-                $stmt->execute([$_POST['name'], $_POST['email'], $password_hash]);
+                $address = trim($_POST['address'] ?? '');
+                $phone = trim($_POST['phone'] ?? '');
+                $about = trim($_POST['about'] ?? '');
+                $profile_pic_path = '';
+                if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['tmp_name']) {
+                    $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        $pic_name = 'admin_' . time() . rand(1000, 9999) . '.' . $ext;
+                        $dest = __DIR__ . '/profile_pics/' . $pic_name;
+                        if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $dest)) {
+                            $profile_pic_path = 'profile_pics/' . $pic_name;
+                        }
+                    }
+                }
+                $stmt = $pdo->prepare("INSERT INTO admins (name, email, password, address, phone, about, profile_pic_path) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([
+                    $_POST['name'],
+                    $_POST['email'],
+                    $password_hash,
+                    $address,
+                    $phone,
+                    $about,
+                    $profile_pic_path
+                ]);
                 break;
 
             case 'update':
+                $address = trim($_POST['address'] ?? '');
+                $phone = trim($_POST['phone'] ?? '');
+                $about = trim($_POST['about'] ?? '');
+                $profile_pic_path = $_POST['existing_profile_pic'] ?? '';
+                // Only update profile_pic_path if a new file is uploaded
+                if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['tmp_name']) {
+                    $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        $pic_name = 'admin_' . $_POST['admin_id'] . '_' . time() . '.' . $ext;
+                        $dest = __DIR__ . '/profile_pics/' . $pic_name;
+                        if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $dest)) {
+                            $profile_pic_path = 'profile_pics/' . $pic_name;
+                        }
+                    }
+                }
+                // Always update all fields, but only update password if set
                 if (!empty($_POST['password'])) {
                     $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("UPDATE admins SET name = ?, email = ?, password = ? WHERE id = ?");
-                    $stmt->execute([$_POST['name'], $_POST['email'], $password_hash, $_POST['admin_id']]);
+                    $stmt = $pdo->prepare("UPDATE admins SET name = ?, email = ?, password = ?, address = ?, phone = ?, about = ?, profile_pic_path = ? WHERE id = ?");
+                    $stmt->execute([
+                        trim($_POST['name']),
+                        trim($_POST['email']),
+                        $password_hash,
+                        $address,
+                        $phone,
+                        $about,
+                        $profile_pic_path,
+                        $_POST['admin_id']
+                    ]);
                 } else {
-                    $stmt = $pdo->prepare("UPDATE admins SET name = ?, email = ? WHERE id = ?");
-                    $stmt->execute([$_POST['name'], $_POST['email'], $_POST['admin_id']]);
+                    $stmt = $pdo->prepare("UPDATE admins SET name = ?, email = ?, address = ?, phone = ?, about = ?, profile_pic_path = ? WHERE id = ?");
+                    $stmt->execute([
+                        trim($_POST['name']),
+                        trim($_POST['email']),
+                        $address,
+                        $phone,
+                        $about,
+                        $profile_pic_path,
+                        $_POST['admin_id']
+                    ]);
                 }
                 break;
 
@@ -150,7 +205,7 @@ $admins = $stmt->fetchAll();
                     <h5 class="modal-title">Add New Admin</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <input type="hidden" name="action" value="create">
                         <div class="mb-3">
@@ -160,6 +215,22 @@ $admins = $stmt->fetchAll();
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" name="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">About</label>
+                            <textarea class="form-control" name="about" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" name="profile_pic" accept="image/*">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
@@ -183,10 +254,15 @@ $admins = $stmt->fetchAll();
                     <h5 class="modal-title">Edit Admin</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="admin_id" id="edit_admin_id">
+                        <input type="hidden" name="existing_profile_pic" id="edit_profile_pic_path">
+                        <div class="mb-3 text-center">
+                            <img id="edit_profile_pic_preview" src="../img/placeholder.jpg" alt="Profile Picture" class="rounded-circle mb-2" style="width: 80px; height: 80px; object-fit: cover;">
+                            <input type="file" class="form-control mt-2" name="profile_pic" accept="image/*">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Name</label>
                             <input type="text" class="form-control" name="name" id="edit_name" required>
@@ -194,6 +270,18 @@ $admins = $stmt->fetchAll();
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" class="form-control" name="email" id="edit_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" name="phone" id="edit_phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" id="edit_address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">About</label>
+                            <textarea class="form-control" name="about" id="edit_about" rows="2" required></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password (leave blank to keep current)</label>
@@ -218,6 +306,12 @@ $admins = $stmt->fetchAll();
                 document.getElementById('edit_admin_id').value = admin.id;
                 document.getElementById('edit_name').value = admin.name;
                 document.getElementById('edit_email').value = admin.email;
+                document.getElementById('edit_phone').value = admin.phone || '';
+                document.getElementById('edit_address').value = admin.address || '';
+                document.getElementById('edit_about').value = admin.about || '';
+                document.getElementById('edit_profile_pic_path').value = admin.profile_pic_path || '';
+                const pic = admin.profile_pic_path ? admin.profile_pic_path : '../img/placeholder.jpg';
+                document.getElementById('edit_profile_pic_preview').src = pic;
             });
         });
 

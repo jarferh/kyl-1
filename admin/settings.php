@@ -7,48 +7,78 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-$settingsFile = __DIR__ . '/../config/admin_settings.json';
-// Default settings
-$defaults = [
-    'site_name' => 'KYL',
-    'contact_email' => '',
-    'items_per_page' => 10
-];
-
-// Load existing settings or create defaults
-if (file_exists($settingsFile)) {
-    $json = file_get_contents($settingsFile);
-    $settings = json_decode($json, true) ?: $defaults;
-} else {
-    $settings = $defaults;
-}
-
+$profileMsg = '';
 $message = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $site_name = trim($_POST['site_name'] ?? '');
-    $contact_email = trim($_POST['contact_email'] ?? '');
-    $items_per_page = (int)($_POST['items_per_page'] ?? 10);
+// Fetch current admin info
+$stmt = $pdo->prepare('SELECT * FROM admins WHERE id = ?');
+$stmt->execute([$_SESSION['admin_id']]);
+$admin = $stmt->fetch();
 
-    // Basic validation
-    if ($site_name === '') {
-        $message = 'Site name is required.';
-    } elseif ($contact_email !== '' && !filter_var($contact_email, FILTER_VALIDATE_EMAIL)) {
-        $message = 'Contact email is invalid.';
+// Handle profile update
+if (isset($_POST['profile_update'])) {
+    $new_name = trim($_POST['admin_name'] ?? '');
+    $new_email = trim($_POST['admin_email'] ?? '');
+    $new_phone = trim($_POST['admin_phone'] ?? '');
+    $new_address = trim($_POST['admin_address'] ?? '');
+    $new_about = trim($_POST['admin_about'] ?? '');
+    $current_password = $_POST['current_password'] ?? '';
+    $new_password = $_POST['new_password'] ?? '';
+    $profile_pic = $_FILES['profile_pic'] ?? null;
+
+    // Validate required fields
+    if ($new_name === '' || $new_email === '' || $new_phone === '' || $new_address === '') {
+        $profileMsg = 'Name, email, phone and address are required.';
+    } elseif (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+        $profileMsg = 'Invalid email address.';
     } else {
-        $settings = [
-            'site_name' => $site_name,
-            'contact_email' => $contact_email,
-            'items_per_page' => $items_per_page > 0 ? $items_per_page : 10
-        ];
-        // Save to file
-        if (!is_dir(dirname($settingsFile))) {
-            mkdir(dirname($settingsFile), 0755, true);
+        // Handle password change if requested
+        $updatePassword = false;
+        if ($new_password !== '') {
+            if (!password_verify($current_password, $admin['password'])) {
+                $profileMsg = 'Current password is incorrect.';
+            } else {
+                $updatePassword = true;
+            }
         }
-        file_put_contents($settingsFile, json_encode($settings, JSON_PRETTY_PRINT));
-        $message = 'Settings saved successfully.';
+
+        // Handle profile picture upload
+        $profile_pic_path = $admin['profile_pic_path'] ?? '';
+        if ($profile_pic && $profile_pic['tmp_name']) {
+            $ext = strtolower(pathinfo($profile_pic['name'], PATHINFO_EXTENSION));
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $pic_name = 'admin_' . $_SESSION['admin_id'] . '_' . time() . '.' . $ext;
+                $dest = __DIR__ . '/profile_pics/' . $pic_name;
+                if (move_uploaded_file($profile_pic['tmp_name'], $dest)) {
+                    $profile_pic_path = 'profile_pics/' . $pic_name;
+                } else {
+                    $profileMsg = 'Failed to upload profile picture.';
+                }
+            } else {
+                $profileMsg = 'Invalid image format.';
+            }
+        }
+
+        if ($profileMsg === '') {
+            if ($updatePassword) {
+                $new_hash = password_hash($new_password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare('UPDATE admins SET name=?, email=?, phone=?, address=?, about=?, password=?, profile_pic_path=? WHERE id=?');
+                $stmt->execute([$new_name, $new_email, $new_phone, $new_address, $new_about, $new_hash, $profile_pic_path, $_SESSION['admin_id']]);
+            } else {
+                $stmt = $pdo->prepare('UPDATE admins SET name=?, email=?, phone=?, address=?, about=?, profile_pic_path=? WHERE id=?');
+                $stmt->execute([$new_name, $new_email, $new_phone, $new_address, $new_about, $profile_pic_path, $_SESSION['admin_id']]);
+            }
+            $_SESSION['admin_name'] = $new_name;
+            $profileMsg = 'Profile updated successfully.';
+            // Refresh admin info
+            $stmt = $pdo->prepare('SELECT * FROM admins WHERE id = ?');
+            $stmt->execute([$_SESSION['admin_id']]);
+            $admin = $stmt->fetch();
+        }
     }
 }
+
+// Removed site settings handling - personal info is managed via profile update above.
 
 // Simple page using the admin layout style
 // Render page using same layout/colors as dashboard.php so settings matches
@@ -109,26 +139,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <?php if ($message): ?>
-                            <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
-                        <?php endif; ?>
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label class="form-label">Site Name</label>
-                                <input type="text" name="site_name" class="form-control" required value="<?= htmlspecialchars($settings['site_name'] ?? '') ?>">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="mb-3">My Profile</h5>
+                                <?php if ($profileMsg): ?>
+                                    <div class="alert alert-info"><?= htmlspecialchars($profileMsg) ?></div>
+                                <?php endif; ?>
+                                <form method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="profile_update" value="1">
+                                    <div class="mb-3 text-center">
+                                        <?php if (!empty($admin['profile_pic_path']) && file_exists(__DIR__ . '/' . $admin['profile_pic_path'])): ?>
+                                            <img src="<?= htmlspecialchars($admin['profile_pic_path']) ?>" alt="Profile Picture" class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
+                                        <?php else: ?>
+                                            <img src="../img/placeholder.jpg" alt="Profile Picture" class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
+                                        <?php endif; ?>
+                                        <div>
+                                            <input type="file" name="profile_pic" accept="image/*" class="form-control mt-2">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="admin_name" class="form-control" required value="<?= htmlspecialchars($admin['name'] ?? '') ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" name="admin_email" class="form-control" required value="<?= htmlspecialchars($admin['email'] ?? '') ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" name="admin_phone" class="form-control" required value="<?= htmlspecialchars($admin['phone'] ?? '') ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Address</label>
+                                        <input type="text" name="admin_address" class="form-control" required value="<?= htmlspecialchars($admin['address'] ?? '') ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">About</label>
+                                        <textarea name="admin_about" class="form-control" rows="3"><?= htmlspecialchars($admin['about'] ?? '') ?></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Password <span class="text-muted" style="font-size: 0.9em;">(required to change password)</span></label>
+                                        <input type="password" name="current_password" class="form-control" autocomplete="off">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" name="new_password" class="form-control" autocomplete="off">
+                                    </div>
+                                    <button class="btn btn-primary">Update Profile</button>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Contact Email</label>
-                                <input type="email" name="contact_email" class="form-control" value="<?= htmlspecialchars($settings['contact_email'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mb-3">Admin Management</h5>
+                                <p>Manage admins and add new administrators.</p>
+                                <a href="admins.php" class="btn btn-success"><i class="fas fa-user-plus me-2"></i>Go to Admin Management</a>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Items Per Page</label>
-                                <input type="number" name="items_per_page" class="form-control" min="1" value="<?= htmlspecialchars($settings['items_per_page'] ?? 10) ?>">
-                            </div>
-                            <button class="btn btn-primary">Save Settings</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
