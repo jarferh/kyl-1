@@ -9,7 +9,8 @@ session_start();
 require_once('../config/database.php');
 
 // Function to check if there's an active batch
-function getActiveBatch($pdo) {
+function getActiveBatch($pdo)
+{
     $stmt = $pdo->prepare("SELECT * FROM batches WHERE status = 'open' AND application_end >= CURRENT_TIMESTAMP ORDER BY created_at DESC LIMIT 1");
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -19,11 +20,17 @@ $activeBatch = getActiveBatch($pdo);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mallam Zaki Fellowship Application - Katagum Youth League</title>
+    <link rel="icon" type="image/x-icon" href="../img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../js/timer.js" defer></script>
+    <script src="../js/main.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -31,50 +38,24 @@ $activeBatch = getActiveBatch($pdo);
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #8b4513;
-            --primary-dark: #6b3410;
-            --primary-light: #a55a28;
-            --secondary: #f8f9fa;
-            --accent: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --dark: #212529;
-            --light: #ffffff;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-400: #ced4da;
-            --gray-500: #adb5bd;
-            --gray-600: #6c757d;
-            --gray-700: #495057;
-            --gray-800: #343a40;
-            --gray-900: #212529;
-            --border-radius: 12px;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
-            --shadow-xl: 0 20px 25px rgba(0,0,0,0.25);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    /* Use site-wide variables from ../style.css to keep theme consistent */
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--gray-700);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000; /* match homepage dark background */
             min-height: 100vh;
         }
 
-        /* Header Styles */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        /* Header Styles (match site header) */
+        #header {
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: var(--shadow-sm);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
         .header-container {
@@ -89,47 +70,18 @@ $activeBatch = getActiveBatch($pdo);
         .logo img {
             height: 50px;
             width: auto;
-        }
-
-        .nav {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav a {
-            text-decoration: none;
-            color: var(--gray-700);
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav a:hover {
-            color: var(--primary);
-        }
-
-        .nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: var(--transition);
-        }
-
-        .nav a:hover::after {
-            width: 100%;
+            filter: brightness(1.1);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, rgba(139, 69, 19, 0.9), rgba(107, 52, 16, 0.8)),
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="50" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="80" r="1.5" fill="rgba(255,255,255,0.08)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+            height: 40vh;
+            min-height: 300px;
+
+            background: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(20,20,20,0.85)),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.02)"/><circle cx="80" cy="50" r="1" fill="rgba(255,255,255,0.01)"/><circle cx="50" cy="80" r="1.5" fill="rgba(255,255,255,0.015)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
             color: white;
-            padding: 4rem 0;
+            padding: 1.25rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -142,13 +94,18 @@ $activeBatch = getActiveBatch($pdo);
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
         }
 
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .hero-content {
@@ -163,7 +120,7 @@ $activeBatch = getActiveBatch($pdo);
             font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .hero p {
@@ -281,6 +238,7 @@ $activeBatch = getActiveBatch($pdo);
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -364,7 +322,6 @@ $activeBatch = getActiveBatch($pdo);
 
         /* Form Controls */
         .form-control {
-            color:(var(--light));
             width: 100%;
             padding: 0.875rem 1rem;
             border: 2px solid var(--gray-300);
@@ -373,6 +330,7 @@ $activeBatch = getActiveBatch($pdo);
             background: var(--light);
             transition: var(--transition);
             position: relative;
+            color: var(--gray-700);
         }
 
         .form-control:focus {
@@ -394,7 +352,19 @@ $activeBatch = getActiveBatch($pdo);
 
         select.form-control {
             cursor: pointer;
-            color:(var(--light))
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+        }
+
+        select.form-control option {
+            color: var(--gray-700);
+            background: var(--light);
         }
 
         input[type="file"].form-control {
@@ -403,6 +373,22 @@ $activeBatch = getActiveBatch($pdo);
             background: var(--gray-50);
             cursor: pointer;
             transition: var(--transition);
+            color: var(--gray-700);
+        }
+
+        input[type="file"].form-control::file-selector-button {
+            padding: 0.5rem 1rem;
+            margin-right: 1rem;
+            border-radius: 6px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        input[type="file"].form-control::file-selector-button:hover {
+            background: var(--primary-dark);
         }
 
         input[type="file"].form-control:hover {
@@ -440,9 +426,19 @@ $activeBatch = getActiveBatch($pdo);
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         /* Submit Button */
@@ -453,7 +449,7 @@ $activeBatch = getActiveBatch($pdo);
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #FF8C00 100%);
             color: white;
             border: none;
             padding: 1rem 3rem;
@@ -475,7 +471,7 @@ $activeBatch = getActiveBatch($pdo);
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
 
@@ -510,15 +506,20 @@ $activeBatch = getActiveBatch($pdo);
         .spinner {
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Alert */
@@ -540,6 +541,7 @@ $activeBatch = getActiveBatch($pdo);
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -552,27 +554,6 @@ $activeBatch = getActiveBatch($pdo);
 
         .alert-success {
             background: var(--accent);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--primary);
-            color: var(--gray-300);
-            text-align: center;
-            padding: 3rem 2rem 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-logo img {
-            height: 60px;
-            margin-bottom: 1rem;
-            filter: brightness(0.8);
-        }
-
-        .footer p {
-            color: var(--light);
-            margin: 0;
-            opacity: 0.8;
         }
 
         /* Mobile Styles */
@@ -667,19 +648,26 @@ $activeBatch = getActiveBatch($pdo);
 
 <body>
     <!-- Header -->
-    <header class="header">
-        <div class="header-container">
+    <header id="header">
+        <div class="container header-container">
             <div class="logo">
                 <a href="../index.php">
                     <img src="../img/logo.png" alt="Katagum Youth League Logo">
                 </a>
             </div>
-            <nav>
-                <ul class="nav">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
                     <li><a href="../index.php">Home</a></li>
-                    <li><a href="../index.php#about">About</a></li>
-                    <li><a href="../index.php#programs">Programs</a></li>
+                    <li><a href="../index.php#about">About Us</a></li>
+                    <li><a href="../index.php#aims">Aims & Objectives</a></li>
+                    <li><a href="../index.php#achievements">Programs</a></li>
+                    <li><a href="../index.php#timeline">Events</a></li>
+                    <li><a href="../index.php#team">Our Team</a></li>
                     <li><a href="../index.php#contact">Contact</a></li>
+                    <li><a href="../gallery.html">Gallery</a></li>
                 </ul>
             </nav>
         </div>
@@ -720,687 +708,703 @@ $activeBatch = getActiveBatch($pdo);
 
             <!-- Status Messages -->
             <?php if ($activeBatch): ?>
-            <div class="status-message status-success" style="display: flex; align-items: center; gap: 1.5rem;">
-                <div style="font-size: 2.2rem; color: var(--accent);">
-                    <i class="fas fa-bullhorn"></i>
+                <div class="status-message status-success" style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="font-size: 2.2rem; color: var(--accent);">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div>
+                        <h3 style="color: #155724; margin-bottom: 8px; font-size: 1.25rem;">
+                            <?php echo htmlspecialchars($activeBatch['name']); ?> — Applications Open
+                        </h3>
+                        <p style="margin: 0; color: #155724;">
+                            <strong>Deadline:</strong>
+                            <span style="background: var(--warning); color: #9b7f02ff; padding: 2px 8px; border-radius: 6px; font-weight: 600; text-align: center;">
+                                <?php echo date('F d, Y', strtotime($activeBatch['application_end'])); ?>
+                            </span>
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <h3 style="color: #155724; margin-bottom: 8px; font-size: 1.25rem;">
-                        <?php echo htmlspecialchars($activeBatch['name']); ?> — Applications Open
-                    </h3>
-                    <p style="margin: 0; color: #155724;">
-                        <strong>Deadline:</strong>
-                        <span style="background: var(--warning); color: #212529; padding: 2px 8px; border-radius: 6px; font-weight: 600; text-align: center;">
-                            <?php echo date('F d, Y', strtotime($activeBatch['application_end'])); ?>
-                        </span>
-                    </p>
-                </div>
-            </div>
             <?php else: ?>
-            <div class="status-message status-closed" style="display: flex; align-items: center; gap: 1.5rem;">
-                <div style="font-size: 2.2rem; color: var(--gray-500);">
-                    <i class="fas fa-lock"></i>
+                <div class="status-message status-closed" style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="font-size: 2.2rem; color: var(--gray-500);">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 8px; color: var(--gray-700); font-size: 1.15rem;">
+                            Applications Currently Closed
+                        </h3>
+                        <p style="margin: 0; color: var(--gray-700);">
+                            There are no open application batches at the moment.<br>
+                            Please check back later or follow us for updates.
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <h3 style="margin-bottom: 8px; color: var(--gray-700); font-size: 1.15rem;">
-                        Applications Currently Closed
-                    </h3>
-                    <p style="margin: 0; color: var(--gray-700);">
-                        There are no open application batches at the moment.<br>
-                        Please check back later or follow us for updates.
-                    </p>
-                </div>
-            </div>
             <?php endif; ?>
             <?php
-// Add this section right after the status messages in apply-fellowship.php
+            // Add this section right after the status messages in apply-fellowship.php
 
-// Handle success/error messages from session
-if (isset($_SESSION['success'])) {
-    echo '<div class="status-message status-success">
+            // Handle success/error messages from session
+            if (isset($_SESSION['success'])) {
+                echo '<div class="status-message status-success">
             <h3 style="color: #155724; margin-bottom: 10px;">Application Submitted Successfully!</h3>
             <p>' . htmlspecialchars($_SESSION['success']) . '</p>
           </div>';
-    unset($_SESSION['success']);
-}
+                unset($_SESSION['success']);
+            }
 
-if (isset($_SESSION['error'])) {
-    echo '<div class="status-message status-error">
+            if (isset($_SESSION['error'])) {
+                echo '<div class="status-message status-error">
             <h3 style="color: #721c24; margin-bottom: 10px;">Error</h3>
             <p>' . htmlspecialchars($_SESSION['error']) . '</p>
           </div>';
-    unset($_SESSION['error']);
-}
+                unset($_SESSION['error']);
+            }
 
-// Handle GET parameter success message
-if (isset($_GET['success']) && $_GET['success'] == '1') {
-    echo '<div class="status-message status-success">
+            // Handle GET parameter success message
+            if (isset($_GET['success']) && $_GET['success'] == '1') {
+                echo '<div class="status-message status-success">
             <h3 style="color: #155724; margin-bottom: 10px;">Application Submitted Successfully!</h3>
             <p>Thank you for your application! We have received your submission and will review it shortly. You should receive a confirmation email soon.</p>
           </div>';
-}
-?>
+            }
+            ?>
             <!-- Application Form -->
             <?php if ($activeBatch): ?>
-            <form id="fellowshipForm" action="process-fellowship.php" method="POST" enctype="multipart/form-data">
-                <!-- Personal Information -->
-                <div class="form-section">
-                    <h3><i class="fas fa-user"></i> Personal Information</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="required-field">Full Name</label>
-                            <input type="text" name="full_name" required class="form-control" placeholder="Enter your full name">
+                <form id="fellowshipForm" action="process-fellowship.php" method="POST" enctype="multipart/form-data">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required-field">Full Name</label>
+                                <input type="text" name="full_name" required class="form-control" placeholder="Enter your full name">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">Date of Birth</label>
+                                <input type="date" name="birth_date" required class="form-control">
+                            </div>
                         </div>
-                        
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required-field">Gender</label>
+                                <select name="gender" required class="form-control">
+                                    <option value=""></option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">State of Origin</label>
+                                <select name="state" required class="form-control">
+                                    <option value=""></option>
+                                    <option value="Bauchi">Bauchi</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required-field">Local Government Area</label>
+                                <select name="local_government" required class="form-control">
+                                    <option value=""></option>
+                                    <option value="Alkaleri">Alkaleri</option>
+                                    <option value="Bauchi">Bauchi</option>
+                                    <option value="Bogoro">Bogoro</option>
+                                    <option value="Dambam">Dambam</option>
+                                    <option value="Darazo">Darazo</option>
+                                    <option value="Dass">Dass</option>
+                                    <option value="Gamawa">Gamawa</option>
+                                    <option value="Ganjuwa">Ganjuwa</option>
+                                    <option value="Giade">Giade</option>
+                                    <option value="Itas/Gadau">Itas/Gadau</option>
+                                    <option value="Jama'are">Jama'are</option>
+                                    <option value="Katagum">Katagum</option>
+                                    <option value="Kirfi">Kirfi</option>
+                                    <option value="Misau">Misau</option>
+                                    <option value="Ningi">Ningi</option>
+                                    <option value="Shira">Shira</option>
+                                    <option value="Tafawa Balewa">Tafawa Balewa</option>
+                                    <option value="Toro">Toro</option>
+                                    <option value="Warji">Warji</option>
+                                    <option value="Zaki">Zaki</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">Ward</label>
+                                <input type="text" name="ward" required class="form-control" placeholder="Enter your ward">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required-field">Phone Number</label>
+                                <input type="tel" name="phone" required class="form-control" placeholder="+234 XXX XXX XXXX">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required-field">Email Address</label>
+                                <input type="email" name="email" required class="form-control" placeholder="your@email.com">
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label class="required-field">Date of Birth</label>
-                            <input type="date" name="birth_date" required class="form-control">
+                            <label class="required-field">Residential Address</label>
+                            <textarea name="residential_address" required class="form-control" placeholder="Enter your full residential address"></textarea>
                         </div>
                     </div>
 
-                    <div class="form-row">
+                    <!-- Educational Background -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Educational Background</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required-field">Highest Level of Education</label>
+                                <select name="education_level" required class="form-control">
+                                    <option value=""></option>
+                                    <option value="SSCE">SSCE</option>
+                                    <option value="NCE">NCE</option>
+                                    <option value="ND">ND</option>
+                                    <option value="HND">HND</option>
+                                    <option value="BSc./BTech.">BSc./BTech.</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Name of Educational Institution</label>
+                                <input type="text" name="institution_name" required class="form-control" placeholder="Name of your school/university">
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label class="required-field">Gender</label>
-                            <select name="gender" required class="form-control">
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
+                            <label class="required-field">Course of Study</label>
+                            <input type="text" name="course_of_study" required class="form-control" placeholder="Your field of study/major">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Year of Graduation</label>
+                            <input type="number" name="graduation_year" min="1990" max="2025" class="form-control" placeholder="2020">
+                        </div>
+                    </div>
+
+                    <!-- Professional Background -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-briefcase"></i> Professional Background</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Current Occupation/Job Title</label>
+                                <input type="text" name="current_occupation" class="form-control" placeholder="Your current job title">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Employer/Organization Name</label>
+                                <input type="text" name="employer_name" class="form-control" placeholder="Name of your employer">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Work Experience (Previous and Current)</label>
+                            <textarea name="work_experience" class="form-control" placeholder="Describe your work experience, including roles, responsibilities, and achievements"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Volunteer Experience</label>
+                            <textarea name="volunteer_experience" required class="form-control" placeholder="Describe your volunteer work and community involvement"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Relevant Skills and Competencies</label>
+                            <textarea name="skills_competencies" required class="form-control" placeholder="List your relevant skills, technical abilities, and competencies"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Leadership Roles Held</label>
+                            <textarea name="leadership_roles" required class="form-control" placeholder="Describe any leadership positions you've held and your achievements"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Motivation and Goals -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-target"></i> Motivation and Goals</h3>
+
+                        <div class="form-group">
+                            <label class="required-field">Why do you want to join The Mallam Zaki Fellowship? (500 words)</label>
+                            <textarea name="why_fellowship" required maxlength="4000" class="form-control" placeholder="Share your motivation for applying to this fellowship..."></textarea>
+                            <div class="char-counter">0/4000 characters</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Describe a challenging situation you faced and how you overcame it. (300 words)</label>
+                            <textarea name="challenge_description" required maxlength="2400" class="form-control" placeholder="Share a specific challenge and your approach to overcoming it..."></textarea>
+                            <div class="char-counter">0/2400 characters</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">What do you hope to achieve through this fellowship? (300 words)</label>
+                            <textarea name="fellowship_goals" required maxlength="2400" class="form-control" placeholder="Describe your goals and expected outcomes from the fellowship..."></textarea>
+                            <div class="char-counter">0/2400 characters</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">How do you plan to apply the skills learned during the fellowship in your community? (300 words)</label>
+                            <textarea name="skills_application" required maxlength="2400" class="form-control" placeholder="Explain how you'll use the fellowship experience to benefit your community..."></textarea>
+                            <div class="char-counter">0/2400 characters</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required-field">Can you accommodate yourself in Azare for a short period, up to 2 weeks?</label>
+                            <select name="can_accommodate" required class="form-control">
+                                <option value=""></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                                <option value="Maybe">Maybe</option>
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <label class="required-field">State of Origin</label>
-                            <select name="state" required class="form-control">
-                                <option value="">Select State</option>
-                                <option value="Bauchi">Bauchi</option>
-                            </select>
-                        </div>
                     </div>
 
-                    <div class="form-row">
+                    <!-- Media Upload -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-upload"></i> Required Documents</h3>
+
                         <div class="form-group">
-                            <label class="required-field">Local Government Area</label>
-                            <select name="local_government" required class="form-control">
-                                <option value="">Select LGA</option>
-                                <option value="Alkaleri">Alkaleri</option>
-                                <option value="Bauchi">Bauchi</option>
-                                <option value="Bogoro">Bogoro</option>
-                                <option value="Dambam">Dambam</option>
-                                <option value="Darazo">Darazo</option>
-                                <option value="Dass">Dass</option>
-                                <option value="Gamawa">Gamawa</option>
-                                <option value="Ganjuwa">Ganjuwa</option>
-                                <option value="Giade">Giade</option>
-                                <option value="Itas/Gadau">Itas/Gadau</option>
-                                <option value="Jama'are">Jama'are</option>
-                                <option value="Katagum">Katagum</option>
-                                <option value="Kirfi">Kirfi</option>
-                                <option value="Misau">Misau</option>
-                                <option value="Ningi">Ningi</option>
-                                <option value="Shira">Shira</option>
-                                <option value="Tafawa Balewa">Tafawa Balewa</option>
-                                <option value="Toro">Toro</option>
-                                <option value="Warji">Warji</option>
-                                <option value="Zaki">Zaki</option>
-                            </select>
+                            <label class="required-field">In 1 minute or less Video, tell us why you should be selected</label>
+                            <input type="file" name="video" accept="video/*" required class="form-control">
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Upload 1 supported file: video. Max 10 MB.
+                            </small>
                         </div>
 
                         <div class="form-group">
-                            <label class="required-field">Ward</label>
-                            <input type="text" name="ward" required class="form-control" placeholder="Enter your ward">
+                            <label class="required-field">Recent Passport Photograph</label>
+                            <input type="file" name="passport_photo" accept="image/*" required class="form-control">
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Upload 1 supported file: image. Max 1 MB.
+                            </small>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="required-field">Phone Number</label>
-                            <input type="tel" name="phone" required class="form-control" placeholder="+234 XXX XXX XXXX">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="required-field">Email Address</label>
-                            <input type="email" name="email" required class="form-control" placeholder="your@email.com">
-                        </div>
+                    <!-- Submit Section -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <span class="btn-text">Submit Application</span>
+                            <div class="spinner" style="display: none;"></div>
+                        </button>
+                        <p style="margin-top: 1rem; color: var(--gray-600); font-size: 0.9rem;">
+                            Please review all information carefully before submitting. You will receive a confirmation email upon successful submission.
+                        </p>
                     </div>
+                </form>
 
-                    <div class="form-group">
-                        <label class="required-field">Residential Address</label>
-                        <textarea name="residential_address" required class="form-control" placeholder="Enter your full residential address"></textarea>
-                    </div>
-                </div>
-
-                <!-- Educational Background -->
-                <div class="form-section">
-                    <h3><i class="fas fa-graduation-cap"></i> Educational Background</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="required-field">Highest Level of Education</label>
-                            <select name="education_level" required class="form-control">
-                                <option value="">Select Education Level</option>
-                                <option value="SSCE">SSCE</option>
-                                <option value="NCE">NCE</option>
-                                <option value="ND">ND</option>
-                                <option value="HND">HND</option>
-                                <option value="BSc./BTech.">BSc./BTech.</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Name of Educational Institution</label>
-                            <input type="text" name="institution_name" required class="form-control" placeholder="Name of your school/university">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Course of Study</label>
-                        <input type="text" name="course_of_study" required class="form-control" placeholder="Your field of study/major">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Year of Graduation</label>
-                        <input type="number" name="graduation_year" min="1990" max="2025" class="form-control" placeholder="2020">
-                    </div>
-                </div>
-
-                <!-- Professional Background -->
-                <div class="form-section">
-                    <h3><i class="fas fa-briefcase"></i> Professional Background</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Current Occupation/Job Title</label>
-                            <input type="text" name="current_occupation" class="form-control" placeholder="Your current job title">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Employer/Organization Name</label>
-                            <input type="text" name="employer_name" class="form-control" placeholder="Name of your employer">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Work Experience (Previous and Current)</label>
-                        <textarea name="work_experience" class="form-control" placeholder="Describe your work experience, including roles, responsibilities, and achievements"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Volunteer Experience</label>
-                        <textarea name="volunteer_experience" required class="form-control" placeholder="Describe your volunteer work and community involvement"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Relevant Skills and Competencies</label>
-                        <textarea name="skills_competencies" required class="form-control" placeholder="List your relevant skills, technical abilities, and competencies"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Leadership Roles Held</label>
-                        <textarea name="leadership_roles" required class="form-control" placeholder="Describe any leadership positions you've held and your achievements"></textarea>
-                    </div>
-                </div>
-
-                <!-- Motivation and Goals -->
-                <div class="form-section">
-                    <h3><i class="fas fa-target"></i> Motivation and Goals</h3>
-
-                    <div class="form-group">
-                        <label class="required-field">Why do you want to join The Mallam Zaki Fellowship? (500 words)</label>
-                        <textarea name="why_fellowship" required maxlength="4000" class="form-control" placeholder="Share your motivation for applying to this fellowship..."></textarea>
-                        <div class="char-counter">0/4000 characters</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Describe a challenging situation you faced and how you overcame it. (300 words)</label>
-                        <textarea name="challenge_description" required maxlength="2400" class="form-control" placeholder="Share a specific challenge and your approach to overcoming it..."></textarea>
-                        <div class="char-counter">0/2400 characters</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">What do you hope to achieve through this fellowship? (300 words)</label>
-                        <textarea name="fellowship_goals" required maxlength="2400" class="form-control" placeholder="Describe your goals and expected outcomes from the fellowship..."></textarea>
-                        <div class="char-counter">0/2400 characters</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">How do you plan to apply the skills learned during the fellowship in your community? (300 words)</label>
-                        <textarea name="skills_application" required maxlength="2400" class="form-control" placeholder="Explain how you'll use the fellowship experience to benefit your community..."></textarea>
-                        <div class="char-counter">0/2400 characters</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Can you accommodate yourself in Azare for a short period, up to 2 weeks?</label>
-                        <select name="can_accommodate" required class="form-control">
-                            <option value="">Select Answer</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                            <option value="Maybe">Maybe</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Media Upload -->
-                <div class="form-section">
-                    <h3><i class="fas fa-upload"></i> Required Documents</h3>
-
-                    <div class="form-group">
-                        <label class="required-field">In 1 minute or less Video, tell us why you should be selected</label>
-                        <input type="file" name="video" accept="video/*" required class="form-control">
-                        <small class="form-text text-muted">
-                            <i class="fas fa-info-circle"></i> 
-                            Upload 1 supported file: video. Max 10 MB.
-                        </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Recent Passport Photograph</label>
-                        <input type="file" name="passport_photo" accept="image/*" required class="form-control">
-                        <small class="form-text text-muted">
-                            <i class="fas fa-info-circle"></i> 
-                            Upload 1 supported file: image. Max 1 MB.
-                        </small>
-                    </div>
-                </div>
-
-                <!-- Submit Section -->
-                <div class="submit-section">
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <span class="btn-text">Submit Application</span>
-                        <div class="spinner" style="display: none;"></div>
-                    </button>
-                    <p style="margin-top: 1rem; color: var(--gray-600); font-size: 0.9rem;">
-                        Please review all information carefully before submitting. You will receive a confirmation email upon successful submission.
-                    </p>
-                </div>
-            </form>
-            
         </div>
     </div>
 
-    <?php endif; ?>
-    
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-logo">
-            <img src="../img/logo.png" alt="Katagum Youth League Logo">
+<?php endif; ?>
+
+       <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../img/logo.png" alt="Katagum Youth League Logo">
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#aims">Aims</a>
+                <a href="#achievements">Programs</a>
+                <a href="#timeline">Events</a>
+                <a href="#team">Team</a>
+                <a href="#get-involved">Get Involved</a>
+                <a href="#contact">Contact</a>
+                <a href="gallery.html">Gallery</a>
+            </div>
+            <p class="copyright">© 2024 Katagum Youth League. All Rights Reserved.</p>
+            <!-- <p class="copyright">© Innovation Company</p> -->
         </div>
-        <p>&copy; 2024 Katagum Youth League. All Rights Reserved.</p>
     </footer>
 
-    <!-- Alert Container -->
-    <div id="alertContainer"></div>
+<!-- Alert Container -->
+<div id="alertContainer"></div>
 
-    <script>
-        // Enhanced Form Functionality
-        class FellowshipForm {
-            constructor() {
-                this.form = document.getElementById('fellowshipForm');
-                this.submitBtn = document.getElementById('submitBtn');
-                this.currentStep = 1;
-                this.totalSteps = 4;
-                this.isSubmitting = false;
-                
-                this.init();
-            }
+<script>
+    // Enhanced Form Functionality
+    class FellowshipForm {
+        constructor() {
+            this.form = document.getElementById('fellowshipForm');
+            this.submitBtn = document.getElementById('submitBtn');
+            this.currentStep = 1;
+            this.totalSteps = 4;
+            this.isSubmitting = false;
 
-            init() {
-                this.setupEventListeners();
-                this.setupCharacterCounters();
-                this.setupFileValidation();
-                this.setupProgressTracking();
-                this.setupAutoSave();
-            }
+            this.init();
+        }
 
-            setupEventListeners() {
-                // Remove JS form submission override
-                // this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        init() {
+            this.setupEventListeners();
+            this.setupCharacterCounters();
+            this.setupFileValidation();
+            this.setupProgressTracking();
+            this.setupAutoSave();
+        }
 
-                // Real-time validation
-                this.form.addEventListener('input', (e) => this.validateField(e.target));
-                this.form.addEventListener('change', (e) => this.validateField(e.target));
-                
-                // Prevent accidental navigation
-                this.form.addEventListener('submit', () => {
-                    this.isSubmitting = true;
-                });
-                window.addEventListener('beforeunload', (e) => {
-                    if (this.hasUnsavedChanges() && !this.isSubmitting) {
-                        e.preventDefault();
-                        e.returnValue = '';
-                    }
-                });
-            }
+        setupEventListeners() {
+            // Remove JS form submission override
+            // this.form.addEventListener('submit', (e) => this.handleSubmit(e));
 
-            setupCharacterCounters() {
-                document.querySelectorAll('textarea[maxlength]').forEach(textarea => {
-                    const counter = textarea.parentNode.querySelector('.char-counter');
-                    if (counter) {
-                        const updateCounter = () => {
-                            const current = textarea.value.length;
-                            const max = textarea.getAttribute('maxlength');
-                            counter.textContent = `${current}/${max} characters`;
-                            
-                            if (current > max * 0.9) {
-                                counter.style.color = 'var(--warning)';
-                            } else if (current > max * 0.95) {
-                                counter.style.color = 'var(--danger)';
-                            } else {
-                                counter.style.color = 'var(--gray-500)';
-                            }
-                        };
-                        
-                        textarea.addEventListener('input', updateCounter);
-                        updateCounter();
-                    }
-                });
-            }
+            // Real-time validation
+            this.form.addEventListener('input', (e) => this.validateField(e.target));
+            this.form.addEventListener('change', (e) => this.validateField(e.target));
 
-            setupFileValidation() {
-                document.querySelectorAll('input[type="file"]').forEach(input => {
-                    input.addEventListener('change', (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-
-                        const fileName = input.name;
-                        let maxSize, allowedTypes;
-
-                        switch (fileName) {
-                            case 'video':
-                                maxSize = 10 * 1024 * 1024; // 10MB
-                                allowedTypes = ['video/mp4', 'video/mov', 'video/avi', 'video/wmv'];
-                                break;
-                            case 'passport_photo':
-                                maxSize = 1 * 1024 * 1024; // 1MB
-                                allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-                                break;
-                            case 'additional_docs':
-                                maxSize = 10 * 1024 * 1024; // 10MB
-                                allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                                break;
-                        }
-
-                        if (file.size > maxSize) {
-                            this.showAlert(`File size too large. Maximum allowed: ${this.formatFileSize(maxSize)}`, 'error');
-                            input.value = '';
-                            return;
-                        }
-
-                        if (!allowedTypes.includes(file.type)) {
-                            this.showAlert('Invalid file type. Please check the allowed formats.', 'error');
-                            input.value = '';
-                            return;
-                        }
-
-                        this.showAlert(`File "${file.name}" uploaded successfully!`, 'success');
-                    });
-                });
-            }
-
-            setupProgressTracking() {
-                const sections = document.querySelectorAll('.form-section');
-                const progressSteps = document.querySelectorAll('.progress-step');
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const sectionIndex = Array.from(sections).indexOf(entry.target);
-                            if (sectionIndex >= 0 && sectionIndex < progressSteps.length) {
-                                this.updateProgress(sectionIndex + 1);
-                            }
-                        }
-                    });
-                }, { threshold: 0.5 });
-
-                sections.forEach(section => observer.observe(section));
-            }
-
-            setupAutoSave() {
-                // Auto-save form data to prevent data loss
-                let saveTimeout;
-                this.form.addEventListener('input', () => {
-                    clearTimeout(saveTimeout);
-                    saveTimeout = setTimeout(() => {
-                        this.saveFormData();
-                    }, 2000);
-                });
-
-                // Load saved data on page load
-                this.loadFormData();
-            }
-
-            updateProgress(step) {
-                if (step === this.currentStep) return;
-                
-                const progressSteps = document.querySelectorAll('.progress-step');
-                progressSteps.forEach((stepEl, index) => {
-                    if (index < step) {
-                        stepEl.classList.add('active');
-                    } else {
-                        stepEl.classList.remove('active');
-                    }
-                });
-                
-                this.currentStep = step;
-            }
-
-            validateField(field) {
-                const errorDiv = field.parentNode.querySelector('.validation-error');
-                
-                // Remove existing error
-                if (errorDiv) {
-                    errorDiv.remove();
+            // Prevent accidental navigation
+            this.form.addEventListener('submit', () => {
+                this.isSubmitting = true;
+            });
+            window.addEventListener('beforeunload', (e) => {
+                if (this.hasUnsavedChanges() && !this.isSubmitting) {
+                    e.preventDefault();
+                    e.returnValue = '';
                 }
-                field.classList.remove('error');
+            });
+        }
 
-                // Check if field is valid
-                if (field.hasAttribute('required') && !field.value.trim()) {
-                    this.showFieldError(field, 'This field is required');
+        setupCharacterCounters() {
+            document.querySelectorAll('textarea[maxlength]').forEach(textarea => {
+                const counter = textarea.parentNode.querySelector('.char-counter');
+                if (counter) {
+                    const updateCounter = () => {
+                        const current = textarea.value.length;
+                        const max = textarea.getAttribute('maxlength');
+                        counter.textContent = `${current}/${max} characters`;
+
+                        if (current > max * 0.9) {
+                            counter.style.color = 'var(--warning)';
+                        } else if (current > max * 0.95) {
+                            counter.style.color = 'var(--danger)';
+                        } else {
+                            counter.style.color = 'var(--gray-500)';
+                        }
+                    };
+
+                    textarea.addEventListener('input', updateCounter);
+                    updateCounter();
+                }
+            });
+        }
+
+        setupFileValidation() {
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const fileName = input.name;
+                    let maxSize, allowedTypes;
+
+                    switch (fileName) {
+                        case 'video':
+                            maxSize = 10 * 1024 * 1024; // 10MB
+                            allowedTypes = ['video/mp4', 'video/mov', 'video/avi', 'video/wmv'];
+                            break;
+                        case 'passport_photo':
+                            maxSize = 1 * 1024 * 1024; // 1MB
+                            allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                            break;
+                        case 'additional_docs':
+                            maxSize = 10 * 1024 * 1024; // 10MB
+                            allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                            break;
+                    }
+
+                    if (file.size > maxSize) {
+                        this.showAlert(`File size too large. Maximum allowed: ${this.formatFileSize(maxSize)}`, 'error');
+                        input.value = '';
+                        return;
+                    }
+
+                    if (!allowedTypes.includes(file.type)) {
+                        this.showAlert('Invalid file type. Please check the allowed formats.', 'error');
+                        input.value = '';
+                        return;
+                    }
+
+                    this.showAlert(`File "${file.name}" uploaded successfully!`, 'success');
+                });
+            });
+        }
+
+        setupProgressTracking() {
+            const sections = document.querySelectorAll('.form-section');
+            const progressSteps = document.querySelectorAll('.progress-step');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const sectionIndex = Array.from(sections).indexOf(entry.target);
+                        if (sectionIndex >= 0 && sectionIndex < progressSteps.length) {
+                            this.updateProgress(sectionIndex + 1);
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.5
+            });
+
+            sections.forEach(section => observer.observe(section));
+        }
+
+        setupAutoSave() {
+            // Auto-save form data to prevent data loss
+            let saveTimeout;
+            this.form.addEventListener('input', () => {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    this.saveFormData();
+                }, 2000);
+            });
+
+            // Load saved data on page load
+            this.loadFormData();
+        }
+
+        updateProgress(step) {
+            if (step === this.currentStep) return;
+
+            const progressSteps = document.querySelectorAll('.progress-step');
+            progressSteps.forEach((stepEl, index) => {
+                if (index < step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            });
+
+            this.currentStep = step;
+        }
+
+        validateField(field) {
+            const errorDiv = field.parentNode.querySelector('.validation-error');
+
+            // Remove existing error
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+            field.classList.remove('error');
+
+            // Check if field is valid
+            if (field.hasAttribute('required') && !field.value.trim()) {
+                this.showFieldError(field, 'This field is required');
+                return false;
+            }
+
+            // Email validation
+            if (field.type === 'email' && field.value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(field.value)) {
+                    this.showFieldError(field, 'Please enter a valid email address');
                     return false;
                 }
-
-                // Email validation
-                if (field.type === 'email' && field.value) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(field.value)) {
-                        this.showFieldError(field, 'Please enter a valid email address');
-                        return false;
-                    }
-                }
-
-                // Phone validation
-                if (field.type === 'tel' && field.value) {
-                    const phoneRegex = /^(\+234|0)[789][01]\d{8}$/;
-                    if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
-                        this.showFieldError(field, 'Please enter a valid Nigerian phone number');
-                        return false;
-                    }
-                }
-
-                // Date validation (age check)
-                if (field.type === 'date' && field.name === 'birth_date' && field.value) {
-                    const birthDate = new Date(field.value);
-                    const today = new Date();
-                    const age = today.getFullYear() - birthDate.getFullYear();
-                    
-                    if (age < 18 || age > 35) {
-                        this.showFieldError(field, 'Applicants must be between 18 and 35 years old');
-                        return false;
-                    }
-                }
-
-                return true;
             }
 
-            showFieldError(field, message) {
-                field.classList.add('error');
-                
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'validation-error';
-                errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-                
-                field.parentNode.appendChild(errorDiv);
-            }
-
-            async handleSubmit(e) {
-                e.preventDefault();
-                
-                if (this.isSubmitting) return;
-                
-                // Validate all fields
-                const isValid = this.validateForm();
-                if (!isValid) {
-                    this.showAlert('Please correct the errors in the form before submitting.', 'error');
-                    return;
-                }
-
-                this.setSubmittingState(true);
-
-                try {
-                    const formData = new FormData(this.form);
-                    
-                    // Simulate form submission (replace with actual submission)
-                    await this.simulateSubmission(formData);
-                    
-                    this.showAlert('Application submitted successfully! You will receive a confirmation email shortly.', 'success');
-                    this.clearFormData();
-                    
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    this.showAlert('An error occurred while submitting your application. Please try again.', 'error');
-                } finally {
-                    this.setSubmittingState(false);
+            // Phone validation
+            if (field.type === 'tel' && field.value) {
+                const phoneRegex = /^(\+234|0)[789][01]\d{8}$/;
+                if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
+                    this.showFieldError(field, 'Please enter a valid Nigerian phone number');
+                    return false;
                 }
             }
 
-            validateForm() {
-                const requiredFields = this.form.querySelectorAll('[required]');
-                let isValid = true;
-                let firstError = null;
+            // Date validation (age check)
+            if (field.type === 'date' && field.name === 'birth_date' && field.value) {
+                const birthDate = new Date(field.value);
+                const today = new Date();
+                const age = today.getFullYear() - birthDate.getFullYear();
 
-                requiredFields.forEach(field => {
-                    if (!this.validateField(field)) {
-                        isValid = false;
-                        if (!firstError) firstError = field;
-                    }
+                if (age < 18 || age > 35) {
+                    this.showFieldError(field, 'Applicants must be between 18 and 35 years old');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        showFieldError(field, message) {
+            field.classList.add('error');
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'validation-error';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+
+            field.parentNode.appendChild(errorDiv);
+        }
+
+        async handleSubmit(e) {
+            e.preventDefault();
+
+            if (this.isSubmitting) return;
+
+            // Validate all fields
+            const isValid = this.validateForm();
+            if (!isValid) {
+                this.showAlert('Please correct the errors in the form before submitting.', 'error');
+                return;
+            }
+
+            this.setSubmittingState(true);
+
+            try {
+                const formData = new FormData(this.form);
+
+                // Simulate form submission (replace with actual submission)
+                await this.simulateSubmission(formData);
+
+                this.showAlert('Application submitted successfully! You will receive a confirmation email shortly.', 'success');
+                this.clearFormData();
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                this.showAlert('An error occurred while submitting your application. Please try again.', 'error');
+            } finally {
+                this.setSubmittingState(false);
+            }
+        }
+
+        validateForm() {
+            const requiredFields = this.form.querySelectorAll('[required]');
+            let isValid = true;
+            let firstError = null;
+
+            requiredFields.forEach(field => {
+                if (!this.validateField(field)) {
+                    isValid = false;
+                    if (!firstError) firstError = field;
+                }
+            });
+
+            // Scroll to first error
+            if (firstError) {
+                firstError.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
                 });
-
-                // Scroll to first error
-                if (firstError) {
-                    firstError.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                    firstError.focus();
-                }
-
-                return isValid;
+                firstError.focus();
             }
 
-            setSubmittingState(isSubmitting) {
-                this.isSubmitting = isSubmitting;
-                const btnText = this.submitBtn.querySelector('.btn-text');
-                const spinner = this.submitBtn.querySelector('.spinner');
-                
-                if (isSubmitting) {
-                    btnText.textContent = 'Submitting...';
-                    spinner.style.display = 'inline-block';
-                    this.submitBtn.disabled = true;
-                } else {
-                    btnText.textContent = 'Submit Application';
-                    spinner.style.display = 'none';
-                    this.submitBtn.disabled = false;
-                }
-            }
+            return isValid;
+        }
 
-            async simulateSubmission(formData) {
-                // Simulate network delay
-                return new Promise((resolve) => {
-                    setTimeout(resolve, 2000);
-                });
-            }
+        setSubmittingState(isSubmitting) {
+            this.isSubmitting = isSubmitting;
+            const btnText = this.submitBtn.querySelector('.btn-text');
+            const spinner = this.submitBtn.querySelector('.spinner');
 
-            showAlert(message, type = 'success') {
-                const alertContainer = document.getElementById('alertContainer');
-                const alert = document.createElement('div');
-                alert.className = `alert alert-${type}`;
-                alert.innerHTML = `
+            if (isSubmitting) {
+                btnText.textContent = 'Submitting...';
+                spinner.style.display = 'inline-block';
+                this.submitBtn.disabled = true;
+            } else {
+                btnText.textContent = 'Submit Application';
+                spinner.style.display = 'none';
+                this.submitBtn.disabled = false;
+            }
+        }
+
+        async simulateSubmission(formData) {
+            // Simulate network delay
+            return new Promise((resolve) => {
+                setTimeout(resolve, 2000);
+            });
+        }
+
+        showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
                     <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
                     ${message}
                 `;
-                
-                alertContainer.appendChild(alert);
-                
-                setTimeout(() => {
-                    alert.style.animation = 'slideInRight 0.5s ease-out reverse';
-                    setTimeout(() => alert.remove(), 500);
-                }, 4000);
+
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.style.animation = 'slideInRight 0.5s ease-out reverse';
+                setTimeout(() => alert.remove(), 500);
+            }, 4000);
+        }
+
+        saveFormData() {
+            const formData = new FormData(this.form);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (typeof value === 'string') {
+                    data[key] = value;
+                }
             }
 
-            saveFormData() {
-                const formData = new FormData(this.form);
-                const data = {};
-                
-                for (let [key, value] of formData.entries()) {
-                    if (typeof value === 'string') {
-                        data[key] = value;
+            // Store in memory instead of localStorage
+            this.savedData = data;
+        }
+
+        loadFormData() {
+            if (this.savedData) {
+                Object.entries(this.savedData).forEach(([key, value]) => {
+                    const field = this.form.querySelector(`[name="${key}"]`);
+                    if (field && field.type !== 'file') {
+                        field.value = value;
                     }
-                }
-                
-                // Store in memory instead of localStorage
-                this.savedData = data;
-            }
-
-            loadFormData() {
-                if (this.savedData) {
-                    Object.entries(this.savedData).forEach(([key, value]) => {
-                        const field = this.form.querySelector(`[name="${key}"]`);
-                        if (field && field.type !== 'file') {
-                            field.value = value;
-                        }
-                    });
-                }
-            }
-
-            clearFormData() {
-                this.savedData = null;
-            }
-
-            hasUnsavedChanges() {
-                return this.savedData && Object.keys(this.savedData).length > 0;
-            }
-
-            formatFileSize(bytes) {
-                const sizes = ['B', 'KB', 'MB', 'GB'];
-                if (bytes === 0) return '0 B';
-                const i = Math.floor(Math.log(bytes) / Math.log(1024));
-                return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+                });
             }
         }
 
-        // Initialize the form when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new FellowshipForm();
-        });
-
-        // Additional utility functions
-        function smoothScrollTo(element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        clearFormData() {
+            this.savedData = null;
         }
 
-        // Add modern form styling enhancements
-        document.querySelectorAll('.form-control').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentNode.classList.add('focused');
-            });
-            
-            input.addEventListener('blur', function() {
-                this.parentNode.classList.remove('focused');
-            });
+        hasUnsavedChanges() {
+            return this.savedData && Object.keys(this.savedData).length > 0;
+        }
+
+        formatFileSize(bytes) {
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            if (bytes === 0) return '0 B';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+    }
+
+    // Initialize the form when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new FellowshipForm();
+    });
+
+    // Additional utility functions
+    function smoothScrollTo(element) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
         });
-    </script>
+    }
+
+    // Add modern form styling enhancements
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentNode.classList.add('focused');
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentNode.classList.remove('focused');
+        });
+    });
+</script>
 </body>
+
 </html>

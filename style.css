@@ -1472,6 +1472,38 @@ nav ul li a:hover {
                 left: 21px !important;
             }
         }
+
+        /* About section mobile tweaks for better readability */
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px 12px;
+            }
+
+            .about-image img {
+                height: 220px; /* smaller image on mobile */
+                border-radius: 14px;
+            }
+
+            .about-text p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            .founder-quote {
+                padding: 20px;
+                margin-top: 20px;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
         
         @media (max-width: 768px) {
             h2 {
@@ -1492,8 +1524,9 @@ nav ul li a:hover {
                 left: -100%;
                 width: 80%;
                 height: calc(100vh - 80px);
-                background: var(--white);
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                /* Use site dark background variable so mobile sidebar is solid (not transparent) */
+                background: var(--bg-primary);
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
                 transition: all 0.3s ease;
                 z-index: 999;
             }
@@ -1512,7 +1545,8 @@ nav ul li a:hover {
             }
             
             nav ul li a {
-                color: var(--primary-brown);
+                /* Ensure high contrast on dark mobile sidebar */
+                color: var(--text-primary);
             }
             
             header.scrolled nav {

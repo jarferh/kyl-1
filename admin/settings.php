@@ -93,6 +93,17 @@ if (isset($_POST['profile_update'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        .mobile-menu-btn, .menu-toggle { display: none; background: transparent; border: none; color: #fff; font-size: 1.25rem; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 998; transition: opacity 0.2s ease; }
+        @media (max-width: 991.98px) {
+            .mobile-menu-btn, .menu-toggle { display: inline-flex; align-items: center; gap: .5rem; }
+            .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 280px; z-index: 999; transition: left 0.25s ease; }
+            .sidebar.open { left: 0; }
+            .main-content { margin-left: 0 !important; }
+            .sidebar-overlay.show { display: block; opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
@@ -142,11 +153,16 @@ if (isset($_POST['profile_update'])) {
         </div>
     </div>
 
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
 
         <!-- Main Content -->
         <div class="main-content px-4 py-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Settings</h2>
+                <div>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+                    <h2 style="display:inline-block; margin-left:.5rem;">Settings</h2>
+                </div>
                 <div class="text-muted">Welcome, <?php echo htmlspecialchars($_SESSION['admin_name']); ?></div>
             </div>
 
@@ -213,6 +229,51 @@ if (isset($_POST['profile_update'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile sidebar toggle (robust)
+        (function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mobileBtn = document.getElementById('mobileMenuBtn') || document.querySelector('.menu-toggle');
+            if (!sidebar || !mobileBtn) return;
+
+            // Ensure overlay exists (create if missing)
+            let overlay = document.getElementById('sidebarOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'sidebarOverlay';
+                overlay.className = 'sidebar-overlay';
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.appendChild(overlay);
+            }
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                mobileBtn.setAttribute('aria-expanded', 'true');
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            }
+
+            mobileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+            });
+
+            overlay.addEventListener('click', function() { closeSidebar(); });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            });
+        })();
+    </script>
 </body>
 
 </html>

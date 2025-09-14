@@ -45,6 +45,17 @@ $age = $birth_date->diff($today)->y;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        .mobile-menu-btn, .menu-toggle { display: none; background: transparent; border: none; color: #fff; font-size: 1.25rem; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 998; transition: opacity 0.2s ease; }
+        @media (max-width: 991.98px) {
+            .mobile-menu-btn, .menu-toggle { display: inline-flex; align-items: center; gap: .5rem; }
+            .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 280px; z-index: 999; transition: left 0.25s ease; }
+            .sidebar.open { left: 0; }
+            .main-content { margin-left: 0 !important; }
+            .sidebar-overlay.show { display: block; opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
@@ -93,11 +104,14 @@ $age = $birth_date->diff($today)->y;
         </div>
     </div>
 
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
 
     <div class="main-content">
         <div class="dashboard-header">
             <div class="header-left">
-                <h3>Application Details</h3>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+                <h3 style="display:inline-block; margin-left:.5rem;">Application Details</h3>
             </div>
             <div class="header-right">
                 <a href="applications.php" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i> Back to Applications</a>
@@ -397,6 +411,21 @@ $age = $birth_date->diff($today)->y;
                 }
             });
         });
+    </script>
+    <script>
+        // Mobile sidebar toggle
+        (function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar || !mobileBtn || !overlay) return;
+
+            function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+            function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+            mobileBtn.addEventListener('click', function() { sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
+            overlay.addEventListener('click', closeSidebar);
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar(); });
+        })();
     </script>
 </body>
 

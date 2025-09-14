@@ -762,7 +762,7 @@
                 <h1>Mallam Zaki Fellowship Program</h1>
                 <p>Empowering the Next Generation of Leaders</p>
                 <div class="hero-btns">
-                    <a href="#apply" class="btn">Apply Now</a>
+                    <a href="apply-fellowship.php" class="btn">Apply Now</a>
                     <a href="#benefits" class="btn btn-outline">Learn More</a>
                 </div>
             </div>

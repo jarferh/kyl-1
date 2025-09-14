@@ -124,7 +124,7 @@ if (strpos($rawId, 'demo-') === 0) {
             <div class="logo">
                 <img src="img/logo.png" alt="Katagum Youth League Logo">
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="mainNav">
@@ -137,6 +137,47 @@ if (strpos($rawId, 'demo-') === 0) {
             </nav>
         </div>
     </header>
+
+    <!-- overlay for mobile nav -->
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
+
+    <style>
+    /* Responsive tweaks for event page */
+    @media (max-width: 768px) {
+        /* Header layout */
+        .header-container { display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px; }
+        .logo img { height:40px; }
+        /* hide desktop nav by default on small screens */
+        #mainNav { position:fixed;top:0;left:-280px;height:100%;width:260px;background:rgba(10,12,15,0.98);padding:20px;transition:left .25s ease;z-index:1200;overflow-y:auto; }
+        #mainNav.active { left:0; }
+        #mainNav ul { list-style:none;padding:0;margin:40px 0 0 0;display:flex;flex-direction:column;gap:12px; }
+        #mainNav a { color:#fff;padding:10px 12px;border-radius:6px;display:block;text-decoration:none; }
+        .mobile-menu-btn { background:transparent;border:0;color:#fff;font-size:1.25rem;z-index:1300; }
+        /* overlay */
+        .nav-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity .2s ease;z-index:1100; }
+        .nav-overlay.show { opacity:1;visibility:visible; }
+
+        /* Hero and content stack */
+        .event-hero { min-height:40vh;padding:28px 16px; }
+        .event-content { padding:24px 12px; }
+        .event-content .event-main, .event-content .event-sidebar { grid-column:1 / -1;width:100%; }
+        .event-content { display:block; }
+        .glass-card { padding:20px; }
+        .countdown-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:8px; }
+        .share-buttons { flex-direction:column; }
+        .share-buttons .btn { width:100%; }
+        .btn { width:100%; display:inline-flex;justify-content:center; }
+    .hero-cta { max-width:100%; }
+    header .header-container a.btn { width:auto; }
+    }
+
+    /* Small refinement for very narrow screens */
+    @media (max-width:420px) {
+        .logo img { height:36px; }
+        #mainNav { width:220px; }
+        .countdown-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    </style>
 
     <!-- Event Hero Banner -->
     <section class="event-hero" style="margin-top:70px;min-height:50vh;background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('<?php echo htmlspecialchars($ev['image'] ?? 'img/kyl.jpg'); ?>') center/cover;display:flex;align-items:center;">
@@ -163,7 +204,7 @@ if (strpos($rawId, 'demo-') === 0) {
                 </div>
             </div>
             <?php if (isset($ev['ticket_url'])): ?>
-            <a href="<?php echo htmlspecialchars($ev['ticket_url']); ?>" class="btn" style="font-size:1.1rem;padding:16px 32px;">
+            <a href="<?php echo htmlspecialchars($ev['ticket_url']); ?>" class="btn hero-cta" style="font-size:1.1rem;padding:16px 32px;max-width:320px;">
                 <?php echo $ev['ticket_price'] > 0 ? 'Get Tickets' : 'Register Now'; ?>
             </a>
             <?php endif; ?>
@@ -188,7 +229,7 @@ if (strpos($rawId, 'demo-') === 0) {
                     <h2 style="font-size:1.5rem;margin-bottom:20px;">Event Schedule</h2>
                     <div class="schedule-list" style="display:flex;flex-direction:column;gap:16px;">
                         <?php foreach ($ev['schedule'] as $item): ?>
-                        <div class="schedule-item" style="display:flex;gap:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;">
+                        <div class="schedule-item" style="display:flex;gap:24px;padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;flex-wrap:wrap;">
                             <div class="time" style="color:#d4af37;font-weight:500;min-width:100px;">
                                 <?php echo htmlspecialchars($item['time']); ?>
                             </div>
@@ -205,7 +246,7 @@ if (strpos($rawId, 'demo-') === 0) {
                 <?php if (!empty($ev['speakers'])): ?>
                 <div class="glass-card" style="padding:32px;">
                     <h2 style="font-size:1.5rem;margin-bottom:20px;">Featured Speakers</h2>
-                    <div class="speakers-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;">
+                    <div class="speakers-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
                         <?php foreach ($ev['speakers'] as $speaker): ?>
                         <div class="speaker-card" style="background:rgba(255,255,255,0.03);padding:24px;border-radius:12px;text-align:center;">
                             <div class="speaker-avatar" style="width:80px;height:80px;background:#d4af37;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
@@ -225,7 +266,7 @@ if (strpos($rawId, 'demo-') === 0) {
             </div>
 
             <!-- Sidebar -->
-            <aside class="event-sidebar">
+                <aside class="event-sidebar">
                 <!-- Event Countdown -->
                 <div class="glass-card" style="margin-bottom:30px;padding:24px;text-align:center;" id="countdown-container">
                     <h3 style="font-size:1.2rem;margin-bottom:16px;">Event Starts In</h3>
@@ -310,11 +351,38 @@ if (strpos($rawId, 'demo-') === 0) {
     </footer>
 
     <script>
-        // Enable mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mainNav').classList.toggle('active');
-            this.classList.toggle('active');
-        });
+        // Enable mobile menu toggle with overlay and scroll lock
+        (function(){
+            var btn = document.getElementById('mobileMenuBtn');
+            var nav = document.getElementById('mainNav');
+            var overlay = document.getElementById('navOverlay');
+
+            function openNav() {
+                nav.classList.add('active');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                btn.setAttribute('aria-expanded', 'true');
+                overlay.setAttribute('aria-hidden', 'false');
+            }
+
+            function closeNav() {
+                nav.classList.remove('active');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                btn.setAttribute('aria-expanded', 'false');
+                overlay.setAttribute('aria-hidden', 'true');
+            }
+
+            btn.addEventListener('click', function(){
+                if (nav.classList.contains('active')) closeNav(); else openNav();
+            });
+
+            overlay.addEventListener('click', closeNav);
+
+            document.addEventListener('keydown', function(e){
+                if (e.key === 'Escape' && nav.classList.contains('active')) closeNav();
+            });
+        })();
 
         // Event countdown timer
         function updateCountdown() {

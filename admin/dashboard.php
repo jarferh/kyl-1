@@ -34,6 +34,49 @@ $recentApplications = $pdo->query("SELECT * FROM fellowship_applications ORDER B
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin.css">
+    <style>
+        /* Mobile sidebar toggle styles (shared) */
+        .mobile-menu-btn, .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 998;
+            transition: opacity 0.2s ease;
+        }
+
+        @media (max-width: 991.98px) {
+            .mobile-menu-btn, .menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                gap: .5rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                height: 100vh;
+                width: 280px;
+                z-index: 999;
+                transition: left 0.25s ease;
+            }
+
+            .sidebar.open { left: 0; }
+
+            .main-content { margin-left: 0 !important; }
+
+            .sidebar-overlay.show { display: block; opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
@@ -82,6 +125,8 @@ $recentApplications = $pdo->query("SELECT * FROM fellowship_applications ORDER B
             </div>
         </div>
     </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -206,9 +251,31 @@ $recentApplications = $pdo->query("SELECT * FROM fellowship_applications ORDER B
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Toggle sidebar on mobile
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('open');
-        });
+        (function() {
+            const sidebar = document.querySelector('.sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar || !menuToggle || !overlay) return;
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            menuToggle.addEventListener('click', function() {
+                if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar(); });
+        })();
 
         // Simple animation for cards on page load
         document.addEventListener('DOMContentLoaded', function() {
