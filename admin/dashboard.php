@@ -60,14 +60,44 @@ $recentApplications = $pdo->query("SELECT * FROM fellowship_applications ORDER B
                 gap: .5rem;
             }
 
+            /* Make sidebar full-height flex and ensure footer is visible */
             .sidebar {
                 position: fixed;
                 left: -280px;
                 top: 0;
+                /* Use fallback for older browsers */
                 height: 100vh;
+                /* Modern viewport units that account for mobile browser chrome */
+                height: 100dvh;
+                min-height: -webkit-fill-available; /* iOS Safari */
                 width: 280px;
                 z-index: 999;
                 transition: left 0.25s ease;
+                display: flex;
+                flex-direction: column;
+                /* Prevent overscroll bounce */
+                overscroll-behavior: contain;
+            }
+
+            /* Make the nav area scrollable while footer stays pinned */
+            .sidebar .d-flex { /* container for nav */
+                overflow: auto;
+                flex: 1 1 0%; /* Changed from auto to 0% to ensure proper shrinking */
+                padding-right: 8px; /* avoid overlaying scrollbar */
+                /* Momentum scroll on iOS */
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .sidebar-footer {
+                flex: 0 0 auto;
+                padding: 12px;
+                border-top: 1px solid rgba(255,255,255,0.04);
+                background: transparent;
+                /* Ensure footer stays above content */
+                position: sticky;
+                bottom: 0;
+                width: 100%;
+                z-index: 1;
             }
 
             .sidebar.open { left: 0; }

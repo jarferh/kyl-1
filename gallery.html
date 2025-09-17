@@ -217,23 +217,36 @@
             <div class="logo">
                 <img src="img/logo.png" alt="Katagum Youth League Logo">
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="mainNav">
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="index.php#about">About Us</a></li>
-                    <li><a href="index.php#aims">Aims & Objectives</a></li>
+                     <li><a href="events.php" class="active">Events</a></li>
                     <li><a href="index.php#achievements">Programs</a></li>
-                    <li><a href="index.php#timeline">Events</a></li>
-                    <li><a href="index.php#team">Our Team</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                     <li><a href="index.php#contact">Contact</a></li>
-                    <li><a href="gallery.html" class="active">Gallery</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+
+    <!-- overlay for mobile nav -->
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
+
+    <style>
+    /* mobile nav styles matching fellowship pattern */
+    @media (max-width: 768px) {
+        .mobile-menu-btn { display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#fff;font-size:1.25rem;z-index:1300;padding:10px; }
+        nav#mainNav { position: fixed; top: 90px; left: -100%; width: 90%; max-width: 400px; height: calc(100vh - 90px); background: rgba(12, 31, 12, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); border-radius: 0 20px 20px 0; transition: left .3s ease; z-index: 999; overflow-y: auto; }
+        nav#mainNav.active { left: 0; }
+        nav#mainNav ul { list-style:none;padding:40px 30px;margin:0;display:flex;flex-direction:column;gap:0; }
+        nav#mainNav a { color:#fff;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:block;text-decoration:none;text-align:center; }
+        .nav-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity .2s ease;z-index:998; }
+        .nav-overlay.show { opacity:1;visibility:visible; }
+    }
+    </style>
 
     <!-- Gallery Hero -->
     <section class="gallery-hero">
@@ -662,7 +675,7 @@
             </div>
             <div class="footer-links">
                 <a href="index.php">Home</a>
-                <a href="index.php#about">About</a>
+                <a href="events.php">About</a>
                 <a href="index.php#aims">Aims</a>
                 <a href="index.php#achievements">Programs</a>
                 <a href="index.php#timeline">Events</a>
@@ -675,11 +688,54 @@
     </footer>
 
     <script>
-        // Reuse the header and mobile menu scripts from main page
+        // Mobile Menu Toggle (copied from programs/fellowship.php)
+        (function(){
+            var btn = document.getElementById('mobileMenuBtn');
+            var nav = document.getElementById('mainNav');
+            var overlay = document.getElementById('navOverlay');
+
+            function openNav(){
+                if (!nav || !overlay || !btn) return;
+                nav.classList.add('active');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                btn.setAttribute('aria-expanded','true');
+                btn.innerHTML = '<i class="fas fa-times"></i>';
+                overlay.setAttribute('aria-hidden','false');
+            }
+            function closeNav(){
+                if (!nav || !overlay || !btn) return;
+                nav.classList.remove('active');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                btn.setAttribute('aria-expanded','false');
+                btn.innerHTML = '<i class="fas fa-bars"></i>';
+                overlay.setAttribute('aria-hidden','true');
+            }
+
+            if (btn && nav) btn.addEventListener('click', function(){ if (nav.classList.contains('active')) closeNav(); else openNav(); });
+            if (overlay) overlay.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && nav && nav.classList.contains('active')) closeNav(); });
+        })();
+
+        // Scroll Header Effect
+        const header = document.getElementById('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
 
         // Gallery Filter
-        const filterButtons = document.querySelectorAll('.gallery-filters button');
-        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        // ...existing gallery script continues below
+
+        // Gallery Filter
+    const filterButtons = document.querySelectorAll('.gallery-filters button');
+    const galleryItems = document.querySelectorAll('.gallery-item');
 
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {

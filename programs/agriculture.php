@@ -6,6 +6,7 @@
     <title>Modern Agriculture Program - Katagum Youth League</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
     <style>
         :root {
             /* Dark Theme */
@@ -532,39 +533,6 @@
             box-shadow: 0 20px 40px rgba(34, 197, 94, 0.4);
         }
 
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
-            border-top: 1px solid var(--glass-border);
-            padding: 60px 0 30px;
-            text-align: center;
-        }
-
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--agriculture-gradient);
-        }
-
-        .footer-logo {
-            margin-bottom: 30px;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .footer-logo img {
-            height: 60px;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
-        }
-
-        .copyright {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin: 0;
-        }
 
         /* Animations */
         @keyframes float {
@@ -721,10 +689,7 @@
     </style>
 </head>
 <body>
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" aria-label="Toggle theme">
-        <i class="fas fa-sun"></i>
-    </button>
+    <!-- theme toggle removed -->
 
     <!-- Header -->
     <header id="header">
@@ -734,19 +699,22 @@
                     <img src="../img/logo.png" alt="Katagum Youth League Logo">
                 </a>
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="mainNav">
                 <ul>
                     <li><a href="../index.php">Home</a></li>
-                    <li><a href="../index.php#about">About</a></li>
-                    <li><a href="../index.php#programs">Programs</a></li>
+                    <li><a href="../events.php" class="active">Events</a></li>
+                    <li><a href="../index.php#achievements">Programs</a></li>
+                    <li><a href="../gallery.html">Gallery</a></li>
                     <li><a href="../index.php#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
 
     <!-- Hero Section -->
     <section class="program-hero">
@@ -836,51 +804,56 @@
         </div>
     </section>
 
-    <!-- Footer -->
+        <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-logo">
                 <img src="../img/logo.png" alt="Katagum Youth League Logo">
             </div>
+            <div class="footer-links">
+                <a href="../index.php">Home</a>
+                <a href="../events.php">About</a>
+                <a href="../index.php#aims">Aims</a>
+                <a href="../index.php#achievements">Programs</a>
+                <a href="../index.php#timeline">Events</a>
+                <a href="../index.php#team">Team</a>
+                <a href="../index.php#contact">Contact</a>
+                <a href="../gallery.html">Gallery</a>
+            </div>
             <p class="copyright">© 2024 Katagum Youth League. All Rights Reserved.</p>
         </div>
     </footer>
-
     <!-- Particles Container -->
     <div class="particles-container"></div>
 
     <script>
-        // Theme Toggle
-        const themeToggle = document.querySelector('.theme-toggle');
-        const currentTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', currentTheme);
+        // Mobile Menu Toggle (fellowship pattern)
+        (function(){
+            var btn = document.getElementById('mobileMenuBtn');
+            var nav = document.getElementById('mainNav');
+            var overlay = document.getElementById('navOverlay');
 
-        function updateThemeIcon() {
-            const theme = document.documentElement.getAttribute('data-theme');
-            const icon = themeToggle.querySelector('i');
-            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
+            function openNav(){
+                nav.classList.add('active');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                btn.setAttribute('aria-expanded','true');
+                btn.innerHTML = '<i class="fas fa-times"></i>';
+                overlay.setAttribute('aria-hidden','false');
+            }
+            function closeNav(){
+                nav.classList.remove('active');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                btn.setAttribute('aria-expanded','false');
+                btn.innerHTML = '<i class="fas fa-bars"></i>';
+                overlay.setAttribute('aria-hidden','true');
+            }
 
-        updateThemeIcon();
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon();
-        });
-
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.getElementById('mainNav');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-            mobileMenuBtn.innerHTML = mainNav.classList.contains('active') ?
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
+            if (btn && nav) btn.addEventListener('click', function(){ if (nav.classList.contains('active')) closeNav(); else openNav(); });
+            if (overlay) overlay.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && nav && nav.classList.contains('active')) closeNav(); });
+        })();
 
         // Scroll Header Effect
         const header = document.getElementById('header');
@@ -894,6 +867,16 @@
         });
 
         // Intersection Observer for animations
-        const observerOptions = {
-            root: null,
-            rootMargin:
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.animate-on-scroll, .program-section, .feature-card, .area-card').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

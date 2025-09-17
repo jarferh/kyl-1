@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,19 +19,19 @@
             --text-primary: #ffffff;
             --text-secondary: #d1e7d1;
             --text-muted: #a3bfa3;
-            
 
-            
+
+
             /* Brand Colors */
             --primary-gradient: linear-gradient(135deg, #2e7d32, #1b5e20);
             --secondary-gradient: linear-gradient(135deg, #388e3c, #2e7d32);
             --fellowship-gradient: linear-gradient(135deg, #43a047, #388e3c);
-            
+
             /* Glassmorphism */
             --glass-border: rgba(255, 255, 255, 0.18);
             --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             --glass-blur: blur(8px);
-            
+
             /* Animations */
             --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -155,7 +156,7 @@
         .program-hero {
             height: 90vh;
             min-height: 700px;
-            background: 
+            background:
                 linear-gradient(45deg, rgba(12, 31, 12, 0.9), rgba(67, 160, 71, 0.7)),
                 url('../fellowship/1.jpeg') center/cover no-repeat fixed;
             display: flex;
@@ -175,7 +176,7 @@
             right: 0;
             bottom: 0;
             background: radial-gradient(circle at 30% 70%, rgba(67, 160, 71, 0.4) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 30%, rgba(46, 125, 50, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 70% 30%, rgba(46, 125, 50, 0.3) 0%, transparent 50%);
             animation: gradientShift 8s ease-in-out infinite;
         }
 
@@ -307,8 +308,13 @@
             opacity: 1;
         }
 
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.4s; }
+        .stat-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stat-card:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         .stat-card:hover {
             transform: translateY(-10px) rotateY(5deg);
@@ -367,7 +373,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
+
         .timeline-item::after {
             content: '';
             position: absolute;
@@ -443,8 +449,13 @@
             animation: fadeInUp 0.6s ease-out;
         }
 
-        .gallery-image:nth-child(2) { animation-delay: 0.2s; }
-        .gallery-image:nth-child(3) { animation-delay: 0.4s; }
+        .gallery-image:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .gallery-image:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         .gallery-image:hover {
             transform: scale(1.05) rotateY(5deg);
@@ -543,7 +554,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.3) 0%, transparent 50%);
             animation: gradientShift 10s ease-in-out infinite;
@@ -593,78 +604,137 @@
             box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
         }
 
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
-            border-top: 1px solid var(--glass-border);
-            padding: 60px 0 30px;
-            text-align: center;
-        }
-
-        .footer-logo {
-            margin-bottom: 30px;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .footer-logo img {
-            height: 60px;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
-        }
-
         /* Animations */
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
         }
 
         @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
-            50% { text-shadow: 0 0 30px rgba(139, 92, 246, 0.8); }
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            }
+
+            50% {
+                text-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+            }
         }
 
         @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         @keyframes countUp {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @keyframes growLine {
-            from { height: 0; }
-            to { height: 100%; }
+            from {
+                height: 0;
+            }
+
+            to {
+                height: 100%;
+            }
         }
 
         /* Responsive Design */
@@ -729,6 +799,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header id="header">
@@ -738,12 +809,13 @@
                     <img src="../img/logo.png" alt="Katagum Youth League Logo">
                 </a>
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="mainNav">
                 <ul>
-                    <li><a href="../index.php#about">About Us</a></li>
+                    <li><a href="../index.php">Home</a></li>
+                    <li><a href="../events.php">About Us</a></li>
                     <li><a href="../index.php#aims">Aims & Objectives</a></li>
                     <li><a href="../index.php#achievements">Programs</a></li>
                     <li><a href="../index.php#timeline">Events</a></li>
@@ -754,6 +826,8 @@
             </nav>
         </div>
     </header>
+
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
 
     <!-- Hero Section -->
     <section class="program-hero">
@@ -879,21 +953,51 @@
             <div class="footer-logo">
                 <img src="../img/logo.png" alt="Katagum Youth League Logo">
             </div>
+            <div class="footer-links">
+                <li><a href="../index.php">Home</a></li>
+                <li><a href="../events.php" class="active">Events</a></li>
+                <li><a href="../index.php#achievements">Programs</a></li>
+                <li><a href="../gallery.html">Gallery</a></li>
+                <li><a href="../index.php#contact">Contact</a></li>
+            </div>
             <p class="copyright">© 2024 Katagum Youth League. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
+        // Mobile Menu Toggle with overlay and scroll lock
+        (function() {
+            var btn = document.getElementById('mobileMenuBtn');
+            var nav = document.getElementById('mainNav');
+            var overlay = document.getElementById('navOverlay');
 
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.getElementById('mainNav');
+            function openNav() {
+                nav.classList.add('active');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                btn.setAttribute('aria-expanded', 'true');
+                btn.innerHTML = '<i class="fas fa-times"></i>';
+                overlay.setAttribute('aria-hidden', 'false');
+            }
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-            mobileMenuBtn.innerHTML = mainNav.classList.contains('active') ?
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
+            function closeNav() {
+                nav.classList.remove('active');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                btn.setAttribute('aria-expanded', 'false');
+                btn.innerHTML = '<i class="fas fa-bars"></i>';
+                overlay.setAttribute('aria-hidden', 'true');
+            }
+
+            if (btn && nav) btn.addEventListener('click', function() {
+                if (nav.classList.contains('active')) closeNav();
+                else openNav();
+            });
+            if (overlay) overlay.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && nav && nav.classList.contains('active')) closeNav();
+            });
+        })();
 
         // Scroll Header Effect
         const header = document.getElementById('header');
@@ -925,4 +1029,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -119,25 +119,28 @@ if (strpos($rawId, 'demo-') === 0) {
     <script src="js/main.js" defer></script>
 </head>
 <body>
+    <!-- Header -->
     <header id="header">
         <div class="container header-container">
             <div class="logo">
-                <img src="img/logo.png" alt="Katagum Youth League Logo">
+                <a href="../index.php">
+                    <img src="img/logo.png" alt="Katagum Youth League Logo">
+                </a>
             </div>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="mainNav">
                 <ul>
-                    <li><a href="index.php">Home</a></li>
+                   <li><a href="index.php">Home</a></li>
                     <li><a href="events.php" class="active">Events</a></li>
+                    <li><a href="#achievements">Programs</a></li>
                     <li><a href="gallery.html">Gallery</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-
     <!-- overlay for mobile nav -->
     <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
 
@@ -147,14 +150,15 @@ if (strpos($rawId, 'demo-') === 0) {
         /* Header layout */
         .header-container { display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px; }
         .logo img { height:40px; }
-        /* hide desktop nav by default on small screens */
-        #mainNav { position:fixed;top:0;left:-280px;height:100%;width:260px;background:rgba(10,12,15,0.98);padding:20px;transition:left .25s ease;z-index:1200;overflow-y:auto; }
-        #mainNav.active { left:0; }
-        #mainNav ul { list-style:none;padding:0;margin:40px 0 0 0;display:flex;flex-direction:column;gap:12px; }
-        #mainNav a { color:#fff;padding:10px 12px;border-radius:6px;display:block;text-decoration:none; }
-        .mobile-menu-btn { background:transparent;border:0;color:#fff;font-size:1.25rem;z-index:1300; }
+        /* mobile menu button visible (fellowship pattern) */
+        .mobile-menu-btn { display:flex;align-items:center;justify-content:center;background:var(--bg-glass, rgba(255,255,255,0.03));backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#fff;font-size:1.25rem;z-index:1300;padding:10px; }
+        /* mobile nav (slide-in) matching fellowship styles */
+        #mainNav { position: fixed; top: 90px; left: -100%; width: 90%; max-width: 400px; height: calc(100vh - 90px); background: rgba(12, 31, 12, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); border-radius: 0 20px 20px 0; transition: left .3s ease; z-index: 999; overflow-y: auto; }
+        #mainNav.active { left: 0; }
+        #mainNav ul { list-style:none;padding:40px 30px;margin:0;display:flex;flex-direction:column;gap:0; }
+        #mainNav a { color:#fff;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:block;text-decoration:none;text-align:center; }
         /* overlay */
-        .nav-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity .2s ease;z-index:1100; }
+        .nav-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity .2s ease;z-index:998; }
         .nav-overlay.show { opacity:1;visibility:visible; }
 
         /* Hero and content stack */
@@ -174,7 +178,7 @@ if (strpos($rawId, 'demo-') === 0) {
     /* Small refinement for very narrow screens */
     @media (max-width:420px) {
         .logo img { height:36px; }
-        #mainNav { width:220px; }
+        #mainNav { max-width:320px; }
         .countdown-grid { grid-template-columns:repeat(2,1fr); }
     }
     </style>
@@ -335,54 +339,78 @@ if (strpos($rawId, 'demo-') === 0) {
         </div>
     </main>
 
-    <footer style="margin-top:60px;background:linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url('img/kyl.jpg') center/cover;border-top:1px solid rgba(255,255,255,0.1);">
-        <div class="container" style="padding:40px 20px;">
+    <!-- Footer -->
+    <footer>
+        <div class="container">
             <div class="footer-logo">
-                <img src="img/logo.png" alt="KYL" style="height:60px;margin-bottom:24px;">
+                <img src="img/logo.png" alt="Katagum Youth League Logo">
             </div>
-            <div class="footer-links" style="margin-bottom:24px;">
-                <a href="index.php" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Home</a>
-                <a href="events.php" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Events</a>
-                <a href="gallery.html" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Gallery</a>
-                <a href="#contact" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Contact</a>
+            <div class="footer-links">
+                <a href="../index.php">Home</a>
+                <a href="../events.php">About</a>
+                <a href="../index.php#aims">Aims</a>
+                <a href="../index.php#achievements">Programs</a>
+                <a href="../index.php#timeline">Events</a>
+                <a href="../index.php#team">Team</a>
+                <a href="../index.php#contact">Contact</a>
+                <a href="../gallery.html">Gallery</a>
             </div>
-            <p class="copyright" style="color:rgba(255,255,255,0.7);font-size:0.9rem;">© 2024 Katagum Youth League. All rights reserved.</p>
+            <p class="copyright">© 2024 Katagum Youth League. All Rights Reserved.</p>
         </div>
     </footer>
-
-    <script>
-        // Enable mobile menu toggle with overlay and scroll lock
+                            <script>
+        // Mobile Menu Toggle (fellowship pattern)
         (function(){
             var btn = document.getElementById('mobileMenuBtn');
             var nav = document.getElementById('mainNav');
             var overlay = document.getElementById('navOverlay');
 
-            function openNav() {
+            function openNav(){
                 nav.classList.add('active');
                 overlay.classList.add('show');
                 document.body.style.overflow = 'hidden';
-                btn.setAttribute('aria-expanded', 'true');
-                overlay.setAttribute('aria-hidden', 'false');
+                btn.setAttribute('aria-expanded','true');
+                btn.innerHTML = '<i class="fas fa-times"></i>';
+                overlay.setAttribute('aria-hidden','false');
             }
-
-            function closeNav() {
+            function closeNav(){
                 nav.classList.remove('active');
                 overlay.classList.remove('show');
                 document.body.style.overflow = '';
-                btn.setAttribute('aria-expanded', 'false');
-                overlay.setAttribute('aria-hidden', 'true');
+                btn.setAttribute('aria-expanded','false');
+                btn.innerHTML = '<i class="fas fa-bars"></i>';
+                overlay.setAttribute('aria-hidden','true');
             }
 
-            btn.addEventListener('click', function(){
-                if (nav.classList.contains('active')) closeNav(); else openNav();
-            });
-
-            overlay.addEventListener('click', closeNav);
-
-            document.addEventListener('keydown', function(e){
-                if (e.key === 'Escape' && nav.classList.contains('active')) closeNav();
-            });
+            if (btn && nav) btn.addEventListener('click', function(){ if (nav.classList.contains('active')) closeNav(); else openNav(); });
+            if (overlay) overlay.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && nav && nav.classList.contains('active')) closeNav(); });
         })();
+
+        // Scroll Header Effect
+        const header = document.getElementById('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.animate-on-scroll, .program-section, .feature-card, .area-card').forEach(el => observer.observe(el));
+    </script>
+    <script>
 
         // Event countdown timer
         function updateCountdown() {

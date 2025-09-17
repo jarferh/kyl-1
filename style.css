@@ -219,6 +219,17 @@ h2::after {
     background-clip: padding-box, border-box;
 }
 
+/* Global mobile nav and overlay defaults */
+@media (max-width: 768px) {
+    .mobile-menu-btn { display: inline-flex !important; align-items: center; gap: .5rem; background: transparent; border: none; color: #fff; }
+    /* Make any slide-in nav opaque and readable */
+    #mainNav { background: #000 !important; color: #fff !important; }
+    #mainNav a { color: #fff !important; }
+    #mainNav.active { box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+    .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity .2s ease; z-index: 998; }
+    .nav-overlay.show { opacity: 1; visibility: visible; }
+}
+
 /* Enhanced Header */
 header {
     position: fixed;

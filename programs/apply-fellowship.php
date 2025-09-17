@@ -661,13 +661,10 @@ $activeBatch = getActiveBatch($pdo);
             <nav id="mainNav">
                 <ul>
                     <li><a href="../index.php">Home</a></li>
-                    <li><a href="../index.php#about">About Us</a></li>
-                    <li><a href="../index.php#aims">Aims & Objectives</a></li>
+                    <li><a href="../events.php" class="active">Events</a></li>
                     <li><a href="../index.php#achievements">Programs</a></li>
-                    <li><a href="../index.php#timeline">Events</a></li>
-                    <li><a href="../index.php#team">Our Team</a></li>
-                    <li><a href="../index.php#contact">Contact</a></li>
                     <li><a href="../gallery.html">Gallery</a></li>
+                    <li><a href="../index.php#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -1015,17 +1012,16 @@ $activeBatch = getActiveBatch($pdo);
                 <img src="../img/logo.png" alt="Katagum Youth League Logo">
             </div>
             <div class="footer-links">
-                <a href="#about">About</a>
-                <a href="#aims">Aims</a>
-                <a href="#achievements">Programs</a>
-                <a href="#timeline">Events</a>
-                <a href="#team">Team</a>
-                <a href="#get-involved">Get Involved</a>
-                <a href="#contact">Contact</a>
-                <a href="gallery.html">Gallery</a>
+                <a href="../index.php">Home</a>
+                <a href="../events.php">About</a>
+                <a href="../index.php#aims">Aims</a>
+                <a href="../index.php#achievements">Programs</a>
+                <a href="../index.php#timeline">Events</a>
+                <a href="../index.php#team">Team</a>
+                <a href="../index.php#contact">Contact</a>
+                <a href="../gallery.html">Gallery</a>
             </div>
             <p class="copyright">© 2024 Katagum Youth League. All Rights Reserved.</p>
-            <!-- <p class="copyright">© Innovation Company</p> -->
         </div>
     </footer>
 

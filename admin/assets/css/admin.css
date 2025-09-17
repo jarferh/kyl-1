@@ -134,15 +134,27 @@ body {
 
 /* Improve header buttons on small screens */
 @media (max-width: 576px) {
-    .dashboard-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; }
-    .header-left { width:100%; }
-    .header-right { width:100%; display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+    /* Keep header on a single row on small screens */
+    .dashboard-header { flex-direction: row; align-items: center; gap: 0.5rem; padding: 0.5rem; }
+    .header-left { display:flex; align-items:center; gap:12px; flex: 1 1 auto; min-width:0; }
+    /* Ensure the title truncates instead of pushing buttons to next line */
+    .header-left h3 {
+        margin: 0;
+        flex: 1 1 auto;
+        min-width: 0; /* allows flex children to shrink properly */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    /* fallback for any other divs inside header-left */
+    .header-left > div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-right { display:flex; gap:8px; align-items:center; flex: 0 0 auto; }
     .header-right .btn-new, .header-right .btn-secondary, .header-right .btn-primary {
-        padding: 0.45rem 0.75rem; font-size: 0.9rem; white-space: nowrap; flex: 0 0 auto;
+        padding: 0.35rem 0.6rem; font-size: 0.9rem; white-space: nowrap; flex: 0 0 auto;
     }
     .btn-new { gap:6px; }
-    /* Allow long titles to wrap without pushing buttons off-screen */
-    .header-left h2, .header-left h3 { font-size: 1.05rem; word-break: break-word; }
 }
 
 /* Slightly reduce button padding on small but not extra-small screens */

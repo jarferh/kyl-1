@@ -114,14 +114,39 @@ $applications = $stmt->fetchAll();
                 gap: .5rem;
             }
 
+            /* Make sidebar full-height flex and ensure footer is visible */
             .sidebar {
                 position: fixed;
                 left: -280px;
                 top: 0;
-                height: 100vh;
+                /* Use modern viewport units for mobile */
+                height: 100dvh;
+                min-height: -webkit-fill-available;
                 width: 280px;
                 z-index: 999;
                 transition: left 0.25s ease;
+                display: flex;
+                flex-direction: column;
+                /* Prevent overscroll bounce */
+                overscroll-behavior: contain;
+            }
+
+            /* Make the nav area scrollable while footer stays pinned */
+            .sidebar .d-flex {
+                overflow: auto;
+                flex: 1 1 0%;
+                padding-right: 8px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .sidebar-footer {
+                flex: 0 0 auto;
+                padding: 12px;
+                position: sticky;
+                bottom: 0;
+                width: 100%;
+                z-index: 1;
+                background: inherit;
             }
 
             .sidebar.open {

@@ -25,7 +25,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="logo">
                 <img src="img/logo.png" alt="Katagum Youth League Logo">
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="mainNav">
@@ -38,7 +38,19 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </ul>
             </nav>
         </div>
+
     </header>
+
+    <!-- overlay for mobile nav -->
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
+
+    <style>
+    /* Small mobile overlay to match fellowship pattern */
+    @media (max-width: 768px) {
+        .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity .2s ease; z-index: 998; }
+        .nav-overlay.show { opacity: 1; visibility: visible; }
+    }
+    </style>
 
     <section class="events-hero" style="background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('img/kyl.jpg') center/cover;min-height:40vh;display:flex;align-items:center;justify-content:center;margin-top:70px;text-align:center;">
         <div class="container">
@@ -89,27 +101,79 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </main>
 
-    <footer style="margin-top:60px;background:linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)),url('img/kyl.jpg') center/cover;border-top:1px solid rgba(255,255,255,0.1);">
-        <div class="container" style="padding:40px 20px;">
+     <!-- Footer -->
+    <footer>
+        <div class="container">
             <div class="footer-logo">
-                <img src="img/logo.png" alt="KYL" style="height:60px;margin-bottom:24px;">
+                <img src="img/logo.png" alt="Katagum Youth League Logo">
             </div>
-            <div class="footer-links" style="margin-bottom:24px;">
-                <a href="index.php" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Home</a>
-                <a href="events.php" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Events</a>
-                <a href="gallery.html" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Gallery</a>
-                <a href="#contact" style="color:#fff;text-decoration:none;font-weight:500;transition:color 0.3s ease;">Contact</a>
+            <div class="footer-links">
+                <a href="../index.php">Home</a>
+                <a href="../events.php">About</a>
+                <a href="../index.php#aims">Aims</a>
+                <a href="../index.php#achievements">Programs</a>
+                <a href="../index.php#timeline">Events</a>
+                <a href="../index.php#team">Team</a>
+                <a href="../index.php#contact">Contact</a>
+                <a href="../gallery.html">Gallery</a>
             </div>
-            <p class="copyright" style="color:rgba(255,255,255,0.7);font-size:0.9rem;">© 2024 Katagum Youth League. All rights reserved.</p>
+            <p class="copyright">© 2024 Katagum Youth League. All Rights Reserved.</p>
         </div>
     </footer>
     
     <script>
-        // Enable mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mainNav').classList.toggle('active');
-            this.classList.toggle('active');
+        // Mobile Menu Toggle (copied from programs/fellowship.php)
+        (function(){
+            var btn = document.getElementById('mobileMenuBtn');
+            var nav = document.getElementById('mainNav');
+            var overlay = document.getElementById('navOverlay');
+
+            function openNav(){
+                if (!nav || !overlay || !btn) return;
+                nav.classList.add('active');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                btn.setAttribute('aria-expanded','true');
+                btn.innerHTML = '<i class="fas fa-times"></i>';
+                overlay.setAttribute('aria-hidden','false');
+            }
+            function closeNav(){
+                if (!nav || !overlay || !btn) return;
+                nav.classList.remove('active');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                btn.setAttribute('aria-expanded','false');
+                btn.innerHTML = '<i class="fas fa-bars"></i>';
+                overlay.setAttribute('aria-hidden','true');
+            }
+
+            if (btn && nav) btn.addEventListener('click', function(){ if (nav.classList.contains('active')) closeNav(); else openNav(); });
+            if (overlay) overlay.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && nav && nav.classList.contains('active')) closeNav(); });
+        })();
+
+        // Scroll Header Effect
+        const header = document.getElementById('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         });
+
+        // Intersection Observer for animations (small enhancement)
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.animate-on-scroll, .program-section, .feature-card, .area-card, .event-card, .glass-card').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
